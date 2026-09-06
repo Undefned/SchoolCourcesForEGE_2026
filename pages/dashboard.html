@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мое обучение — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Dashboard ---- */
+  .dash{display:flex;flex-direction:column;gap:48px;padding-top:48px;}
+
+  /* profile row */
+  .profile-row{display:flex;gap:24px;flex-wrap:wrap;}
+  .profile-card{flex:2 1 420px;display:flex;align-items:center;gap:24px;}
+  .profile-card img{width:96px;height:96px;border-radius:50%;border:3px solid var(--purple);object-fit:cover;}
+  .profile-card h2{font-size:20px;font-weight:700;margin:0;}
+  .profile-card .email{color:var(--main-text);font-size:14px;margin-top:8px;}
+  .profile-stats{flex:1 1 340px;display:flex;gap:12px;flex-wrap:wrap;}
+  .profile-stats .mini-stat{border-radius:24px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;min-height:160px;background:var(--white);flex:1;}
+  .profile-stats .mini-stat .num{font-size:32px;color:var(--purple);font-family:'Unbounded',sans-serif;font-weight:900;}
+  .profile-stats .mini-stat:nth-child(2) .num{color:var(--black);}
+  .profile-stats .mini-stat .label{font-size:13px;font-weight:500;color:var(--main-text);}
+
+  /* progress section */
+  .progress-card .card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
+  .progress-card .card-head h3{font-size:20px;font-weight:700;}
+  .progress-card .card-head .see-more{color:var(--blue);font-size:14px;font-weight:700;text-decoration:none;}
+  .progress-layout{display:flex;gap:24px;flex-wrap:wrap;align-items:stretch;}
+  .subject-list{flex:1 1 480px;display:flex;flex-direction:column;gap:12px;}
+  .subject-row{background:var(--back);border-radius:16px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+  .subject-row .left{display:flex;align-items:center;gap:16px;}
+  .ring{
+    width:64px;height:64px;border-radius:50%;position:relative;
+    background:conic-gradient(var(--ring-color,#8A15EA) calc(var(--pct,0)*1%), #E5E7EB 0);
+    flex-shrink:0;
+  }
+  .ring::after{
+    content:attr(data-pct)"%";
+    position:absolute;inset:6px;background:var(--back);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:var(--black);
+  }
+  .subject-row .name{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;color:#101828;}
+  .subject-row .activity{color:var(--main-text);font-size:14px;margin-top:4px;}
+  .btn-continue{padding:8px 25px;border-radius:100px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;}
+
+  .week-card{
+    flex:1 1 340px;
+    max-width:400px;
+    background:#0C111B;
+    border-radius:20px;
+    padding:24px;
+    display:flex;flex-direction:column;gap:20px;
+    color:white;
+    min-height:320px;
+  }
+  .week-card h4{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;margin:0;}
+  .week-card .sub{color:var(--main-text);font-size:14px;margin-top:4px;}
+  .bars{flex:1;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:16px;}
+  .bar-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
+  .bar{width:24px;border-top-left-radius:6px;border-top-right-radius:6px;min-height:4px;}
+  .bar-col .day{font-size:11px;font-weight:700;color:var(--main-text);}
+
+  /* assignments table */
+  .assign-card .card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px;}
+  .assign-card .card-head h3{font-size:20px;font-weight:700;}
+  .filters{display:flex;gap:12px;flex-wrap:wrap;}
+  .select-chip{padding:14px;background:var(--back);border-radius:14px;display:flex;align-items:center;gap:8px;color:var(--main-text);font-size:14px;min-width:150px;justify-content:space-between;cursor:pointer;}
+  .assign-table{width:100%;border-collapse:collapse;}
+  .assign-table thead th{
+    text-align:left;background:var(--back);color:var(--main-text);font-size:13px;font-weight:700;
+    padding:12px 16px;
+  }
+  .assign-table thead th:last-child{text-align:right;}
+  .assign-table tbody td{padding:16px;border-bottom:1px solid var(--stroke);font-size:14px;vertical-align:middle;}
+  .assign-table tbody td:last-child{text-align:right;font-weight:700;color:var(--black);}
+  .assign-name{color:#101828;font-weight:600;}
+  .assign-subject{color:var(--main-text);font-weight:500;}
+  .status-pill{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;}
+  .status-done{background:#D1FAE5;color:#065F46;}
+  .status-progress{background:#FEF3C7;color:#92400E;}
+  .status-none{background:#F3F4F6;color:#6B7280;}
+  .deadline-urgent{color:#EF4444;}
+  .deadline-normal{color:var(--main-text);}
+
+  /* empty states */
+  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--main-text);font-size:16px;}
+  .empty-state .icon{font-size:48px;display:block;margin-bottom:16px;}
+
+  @media (max-width:700px){
+    .assign-table{display:block;overflow-x:auto;white-space:nowrap;}
+    .profile-row{flex-direction:column;}
+    .profile-card{flex-direction:column;text-align:center;}
+    .profile-stats{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html" class="active">Мое обучение</a></li>
+      <li><a href="schedule.html">Расписание</a></li>
+      <li><a href="knowledge-base.html">База знаний</a></li>
+      <li><a href="support.html">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge" id="headerScore">—</span>
+      <img class="avatar" id="headerAvatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<div class="breadcrumb-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">Главная</a>
+    <span class="sep">›</span>
+    <span class="current">Мое обучение</span>
+  </div>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container">
+  <div class="dash">
+
+    <!-- ====== ПРОФИЛЬ ====== -->
+    <div class="profile-row">
+      <div class="card profile-card">
+        <img id="profileAvatar" src="https://placehold.co/96x96" alt="Аватар">
+        <div>
+          <h2 id="profileName">Загрузка...</h2>
+          <div class="email" id="profileEmail">—</div>
+        </div>
+      </div>
+      <div class="profile-stats">
+        <div class="mini-stat"><span class="num" id="statLessons">0</span><span class="label">Уроков пройдено</span></div>
+        <div class="mini-stat"><span class="num" id="statScore">0</span><span class="label">Средний балл</span></div>
+        <div class="mini-stat"><span class="num" id="statStreak">0</span><span class="label">Ударный режим</span></div>
+      </div>
+    </div>
+
+    <!-- ====== УСПЕВАЕМОСТЬ ====== -->
+    <div class="card progress-card">
+      <div class="card-head">
+        <h3>Моя успеваемость</h3>
+        <a href="#" class="see-more">Подробная статистика по всем предметам</a>
+      </div>
+      <div class="progress-layout">
+        <div class="subject-list" id="subjectList">
+          <!-- Сюда рендерим предметы через JS -->
+        </div>
+        <div class="week-card" id="weekCard">
+          <div>
+            <h4>Активность за неделю</h4>
+            <div class="sub">Средний фокус по дням обучения</div>
+          </div>
+          <div class="bars" id="weeklyBars">
+            <!-- Сюда рендерим график через JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====== ЗАДАНИЯ ====== -->
+    <div class="card assign-card">
+      <div class="card-head">
+        <h3>Мои задания на этой неделе</h3>
+        <div class="filters">
+          <div class="select-chip" id="filterSubject">Все предметы <span>▾</span></div>
+          <div class="select-chip" id="filterStatus">По дедлайну <span>▾</span></div>
+        </div>
+      </div>
+      <table class="assign-table">
+        <thead>
+          <tr>
+            <th>Название задания</th>
+            <th>Предмет</th>
+            <th>Статус</th>
+            <th>Дедлайн</th>
+            <th>Баллы</th>
+          </tr>
+        </thead>
+        <tbody id="assignmentsBody">
+          <!-- Сюда рендерим задания через JS -->
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</main>
+
+<!-- =========================== FOOTER =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="#">Преподаватели</a>
+        <a href="#">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="#">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+<!-- Подключаем основной скрипт -->
+<script src="/scripts/app.js"></script>
+</body>
+</html>

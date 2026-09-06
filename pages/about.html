@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>О нас — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: About ---- */
+  .about-hero{padding:150px 24px 0;}
+  .about-hero-inner{max-width:1094px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;}
+  .about-hero h1{font-size:48px;font-weight:900;}
+  .about-hero p{max-width:1090px;font-size:16px;line-height:1.5;color:var(--header);margin:0;}
+
+  .stats{padding:96px 24px 0;}
+  .stats-inner{max-width:1092px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px;}
+  .stats-grid{width:100%;display:flex;gap:32px;flex-wrap:wrap;}
+  .stat-card{flex:1 1 260px;background:var(--white);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:32px;}
+  .stat-card .figure{color:var(--blue);font-family:'Unbounded',sans-serif;font-weight:900;font-size:32px;line-height:1.25;}
+  .stat-card .desc{max-width:302px;color:#101828;font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;line-height:1.5;}
+
+  .testimonials{padding:96px 24px 0;}
+  .testimonials-inner{max-width:1092px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:32px;}
+  .testimonial-grid{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+  .testimonial-card{background:var(--white);border-radius:24px;padding:24px;display:flex;flex-direction:column;gap:24px;}
+  .testimonial-card .name{color:var(--blue);font-family:'Unbounded',sans-serif;font-weight:900;font-size:24px;line-height:1.3;}
+  .testimonial-card .quote{color:var(--main-text);font-size:14px;line-height:1.7;margin:0;}
+
+  .cta-section{padding:96px 24px;}
+  .cta-section .section-title{font-size:44px;}
+  .cta-section .accent{color:var(--purple);}
+  .cta-flex{max-width:1094px;margin:32px auto 0;display:flex;border-radius:24px;overflow:hidden;}
+  .cta-flex img{width:45%;object-fit:cover;}
+  .cta-form-card{flex:1;background:var(--back);padding:24px;display:flex;flex-direction:column;gap:4px;}
+  .cta-form-card h3{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;}
+  .cta-form-card .sub{color:var(--main-text);font-size:14px;margin:6px 0 20px;}
+  .cta-form{display:flex;flex-direction:column;gap:12px;}
+  .cta-form .field{background:var(--white);border:0.67px solid var(--stroke);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;color:var(--main-text);font-size:14px;}
+  .cta-form .field input,.cta-form .field select{border:none;outline:none;background:transparent;width:100%;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
+  .cta-form .field select{color:var(--main-text);appearance:none;}
+  .cta-fine{text-align:center;color:var(--main-text);font-size:12px;line-height:1.5;margin-top:4px;}
+
+  @media (max-width:900px){
+    .testimonial-grid{grid-template-columns:1fr;}
+    .cta-flex{flex-direction:column;}
+    .cta-flex img{width:100%;height:280px;}
+  }
+  @media (max-width:640px){
+    .about-hero{padding-top:120px;}
+    .about-hero h1{font-size:34px;}
+    .stat-card .figure{font-size:28px;}
+    .cta-section .section-title{font-size:30px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/header.php) =========================== -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="nav-links">
+      <li><a href="index.html#how">Подготовка</a></li>
+      <li><a href="about.html" class="active">О нас</a></li>
+      <li><a href="index.html#cta">Тарифы</a></li>
+      <li><a href="about.html#testimonials">Отзывы</a></li>
+      <li><a href="index.html#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-primary btn-pill">Записаться</button>
+    </div>
+  </nav>
+</div>
+<!-- =========================================================================================== -->
+
+<header class="about-hero">
+  <div class="about-hero-inner">
+    <h1>Мы знаем о ЕГЭ всё</h1>
+    <p>Единый государственный экзамен – это не просто проверка знаний, это отдельная дисциплина со своими правилами, ловушками и психологией. Наш проект создан для того, чтобы превратить этот сложный этап из стресса в возможность.</p>
+    <p>Мы – команда профессиональных репетиторов, экспертов предметных комиссий и психологов. Мы собрали многолетний опыт подготовки в одной системе, которая уже помогла сотням выпускников поступить в вузы мечты.</p>
+  </div>
+</header>
+
+<section class="stats">
+  <div class="stats-inner">
+    <h2 class="section-title">Мы в цифрах</h2>
+    <!-- DYNAMIC: company stats — pull from DB / CMS, loop over stat-card -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="figure">86</span>
+        <span class="desc">оценка каждого 3-го ученика на ЕГЭ</span>
+      </div>
+      <div class="stat-card">
+        <span class="figure">13 000+</span>
+        <span class="desc">отзывов об обучении</span>
+      </div>
+      <div class="stat-card">
+        <span class="figure">439 254</span>
+        <span class="desc">учеников уже подготовились с нами</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-inner">
+    <h2 class="section-title">Результаты наших учеников</h2>
+    <!-- DYNAMIC: testimonials — pull latest N reviews, loop over testimonial-card -->
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="name">Полина Дьячкова</div>
+        <p class="quote">Всем привет! Хочу сказать огромное спасибо всему составу! Особую благодарность выражаю Лилии за литературу – благодаря ей я получила 100 баллов. Отдельное спасибо менеджеру, который помогал не терять веру в себя, и прекрасным девушкам, которые вели весь этот путь вместе со мной.</p>
+      </div>
+      <div class="testimonial-card">
+        <div class="name">Татьяна Томакова</div>
+        <p class="quote">Еще на теоретических уроках Лилии в 10 классе я поняла, что хочу заниматься именно у нее. С марта того же года я начала подготовку, изучала теорию. В 11 классе я не изменила выбор платформы и ни разу не пожалела об этом.</p>
+      </div>
+      <div class="testimonial-card">
+        <div class="name">Максим Григорьев</div>
+        <p class="quote">К русскому языку я всегда относился спокойно, но писал его откровенно слабо. Мне говорили: «читай больше книг», но это не помогало. На платформе я впервые увидел, как работают четкие речевые клише и алгоритмы для сочинения.</p>
+      </div>
+      <div class="testimonial-card">
+        <div class="name">Дарья Ветрова</div>
+        <p class="quote">После первого месяца занятий с Лилией у меня выстроилась четкая система. Я перестала бояться писать сочинения и начала получать от этого удовольствие. Когда пришли результаты – 94 балла – я не поверила своим глазам. Это лучшая инвестиция в мое будущее!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <h2 class="section-title">ЗАПИШИСЬ НА ГОДОВОЙ<br>КУРС <span class="accent">ЕГЭ</span> СЕЙЧАС</h2>
+  <div class="cta-flex">
+    <img src="https://placehold.co/563x393" alt="Студент на занятии">
+    <div class="cta-form-card">
+      <h3>Оставь заявку</h3>
+      <p class="sub">Ответим в течение 5 минут</p>
+      <form class="cta-form" onsubmit="return false;">
+        <label class="field">
+          <select>
+            <option value="" selected disabled>Выбери предмет</option>
+            <option>Русский язык</option>
+            <option>Математика</option>
+            <option>Обществознание</option>
+            <option>Физика</option>
+          </select>
+        </label>
+        <label class="field"><input type="text" placeholder="Твое имя"></label>
+        <label class="field"><input type="tel" placeholder="Номер телефона"></label>
+        <button type="submit" class="btn-primary" style="width:100%;">Записаться бесплатно</button>
+        <div class="cta-fine">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="#">Преподаватели</a>
+        <a href="#">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="#">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+</body>
+</html>

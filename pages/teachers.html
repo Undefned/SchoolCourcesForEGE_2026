@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Преподаватели — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Teachers ---- */
+  .teachers{display:flex;flex-direction:column;gap:32px;padding-top:48px;}
+  .teachers h2{font-size:48px;font-weight:900;}
+
+  .review-list{display:flex;flex-direction:column;gap:16px;}
+  .review-card{
+    display:flex;gap:24px;padding:32px;background:var(--white);
+    border:1px solid var(--stroke);border-radius:12px;align-items:stretch;
+  }
+  .review-photo{width:220px;flex:none;border-radius:12px;overflow:hidden;background:var(--back);}
+  .review-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+  .review-body{flex:1;display:flex;flex-direction:column;gap:16px;}
+  .review-quote-row{display:flex;gap:24px;flex:1;}
+  .quote-bar{width:2px;background:var(--blue);flex:none;}
+  .quote-content{flex:1;display:flex;flex-direction:column;gap:16px;}
+  .rating{display:flex;align-items:center;gap:6px;font-size:18px;font-weight:600;color:var(--black);}
+  .rating .stars{color:#D9D9D9;}
+  .quote-text{margin:0;color:#1E1E1E;font-size:16px;line-height:1.5;}
+  .reviewer{display:flex;align-items:center;gap:16px;}
+  .reviewer .initials{width:32px;height:32px;border-radius:50%;background:var(--blue);color:white;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex:none;}
+  .reviewer .name{color:var(--black);font-size:18px;font-weight:600;}
+
+  @media (max-width:800px){
+    .review-card{flex-direction:column;}
+    .review-photo{width:100%;height:220px;}
+  }
+  @media (max-width:640px){
+    .teachers h2{font-size:34px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html">Мое обучение</a></li>
+      <li><a href="schedule.html">Расписание</a></li>
+      <li><a href="knowledge-base.html">База знаний</a></li>
+      <li><a href="support.html">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge">85 баллов</span>
+      <img class="avatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container" style="padding-top:48px;">
+  <div class="teachers">
+    <h2>Преподаватели</h2>
+
+    <!-- DYNAMIC: teacher reviews, loop over .review-card -->
+    <div class="review-list">
+      <article class="review-card">
+        <div class="review-photo"><img src="https://placehold.co/267x352" alt="Дмитрий Алексеевич"></div>
+        <div class="review-body">
+          <div class="review-quote-row">
+            <span class="quote-bar"></span>
+            <div class="quote-content">
+              <div class="rating"><span class="stars">★★★★</span><span>4/5</span></div>
+              <p class="quote-text">«Дмитрий Алексеевич – тот репетитор, который умеет объяснить сложные юридические и экономические термины простым языком. Он научил меня анализировать первоисточники и грамотно выстраивать развёрнутые ответы. Готовился всего 6 месяцев, но сдал на 87 баллов. Очень рекомендую всем, кто ценит время и качество!»</p>
+            </div>
+          </div>
+          <div class="reviewer">
+            <span class="initials">ДА</span>
+            <span class="name">Дмитрий А</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="review-photo"><img src="https://placehold.co/267x352" alt="Ольга Сергеевна"></div>
+        <div class="review-body">
+          <div class="review-quote-row">
+            <span class="quote-bar"></span>
+            <div class="quote-content">
+              <div class="rating"><span class="stars">★★★★</span><span>4/5</span></div>
+              <p class="quote-text">«Ольга Сергеевна помогла мне побороть страх говорения и довести произношение до автоматизма. Каждое занятие включало живую практику и разбор реальных вариантов ФИПИ. В итоге я сдал устную часть на максимум, а весь экзамен — на 91 балл. Спасибо за чёткий план и мотивацию!»</p>
+            </div>
+          </div>
+          <div class="reviewer">
+            <span class="initials">ОС</span>
+            <span class="name">Ольга С</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="review-photo"><img src="https://placehold.co/267x352" alt="Марина Петровна"></div>
+        <div class="review-body">
+          <div class="review-quote-row">
+            <span class="quote-bar"></span>
+            <div class="quote-content">
+              <div class="rating"><span class="stars">★★★★</span><span>4/5</span></div>
+              <p class="quote-text">«Марина Петровна – настоящий профессионал! Она научила меня писать сочинения по чёткой схеме, дала универсальные клише и банк аргументов, которые пригодились на экзамене. Занятия проходили интенсивно, но комфортно. Результат – 98 баллов и идеальный итоговый диктант. Огромная благодарность!»</p>
+            </div>
+          </div>
+          <div class="reviewer">
+            <span class="initials">МП</span>
+            <span class="name">Мария П</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="review-card">
+        <div class="review-photo"><img src="https://placehold.co/267x352" alt="Александр Иванович"></div>
+        <div class="review-body">
+          <div class="review-quote-row">
+            <span class="quote-bar"></span>
+            <div class="quote-content">
+              <div class="rating"><span class="stars">★★★★</span><span>4/5</span></div>
+              <p class="quote-text">«Александр Иванович не просто научил решать сложные задачи, а буквально привил любовь к математике. Объясняет доступно и структурированно, разбирает каждую ошибку до полного понимания. Благодаря его системе подготовки я набрал 94 балла, хотя начинал с нуля. Спасибо за поддержку и веру в ученика!»</p>
+            </div>
+          </div>
+          <div class="reviewer">
+            <span class="initials">АИ</span>
+            <span class="name">Александр И</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="support.html">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+</body>
+</html>

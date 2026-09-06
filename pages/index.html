@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Экзаметрика — Онлайн-школа подготовки к ЕГЭ и ОГЭ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Landing ---- */
+  .nav-wrap{margin-bottom:-92px;} /* let hero sit up under the floating pill nav */
+
+  .hero{padding:150px 24px 96px;}
+  .hero-inner{max-width:1094px;margin:0 auto;display:flex;flex-direction:column;gap:64px;}
+  .hero-copy{display:flex;flex-direction:column;gap:32px;}
+  .hero-copy h1{font-size:56px;font-weight:900;line-height:1.15;}
+  .hero-copy h1 .accent{color:var(--purple);}
+  .hero-copy p{max-width:640px;color:var(--main-text);font-size:16.8px;line-height:1.65;margin:0;}
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:24px;}
+
+  .lead-card{background:var(--white);border:1px solid var(--stroke);border-radius:16px;padding:24px;}
+  .lead-form{display:flex;flex-wrap:wrap;gap:12px;}
+  .lead-form .field{flex:1 1 160px;background:var(--back);border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--main-text);font-size:14px;}
+  .lead-form .field input{border:none;background:transparent;outline:none;width:100%;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
+  .lead-form .field select{border:none;background:transparent;outline:none;width:100%;font-family:'Inter',sans-serif;font-size:14px;color:var(--main-text);appearance:none;}
+  .lead-form .btn-primary{flex:1 1 220px;border-radius:12px;white-space:nowrap;}
+  .lead-note{padding-top:12px;font-size:14px;color:#4A5565;line-height:1.4;}
+  .lead-note a{color:#155DFC;text-decoration:underline;}
+
+  .why{padding:96px 24px;}
+  .why .section-title{margin-bottom:48px;}
+  .why-grid{max-width:1094px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .why-card{border-radius:24px;padding:24px;padding-bottom:56px;display:flex;flex-direction:column;gap:32px;min-height:230px;}
+  .why-card.feature{background:linear-gradient(155deg, #0C111B 52%, #1E3A5F 100%);color:var(--white);grid-row:span 2;}
+  .why-card:not(.feature){background:var(--white);}
+  .why-num{font-family:'Unbounded',sans-serif;font-weight:900;font-size:16px;color:var(--blue);}
+  .why-card h3{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:700;line-height:1.5;margin-bottom:14px;color:#101828;}
+  .why-card.feature h3{color:var(--white);}
+  .why-card p{margin:0;font-size:14px;line-height:1.7;color:var(--main-text);}
+
+  .how{padding:96px 24px;}
+  .how .section-title{margin-bottom:48px;}
+  .how-inner{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:20px;}
+  .how-step{background:var(--white);border:0.8px solid var(--stroke);border-radius:20px;box-shadow:0 1px 4px rgba(0,0,0,0.04);padding:24px 28px;display:flex;gap:20px;}
+  .how-num{flex:0 0 52px;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Unbounded',sans-serif;font-weight:700;font-size:20px;}
+  .how-step:nth-child(odd) .how-num{background:var(--green);color:var(--black);}
+  .how-step:nth-child(even) .how-num{background:var(--purple);color:var(--white);}
+  .how-text h3{font-family:'Unbounded',sans-serif;font-size:16px;font-weight:700;margin-bottom:8px;}
+  .how-text p{margin:0;color:var(--main-text);font-size:14px;line-height:1.7;}
+
+  .faq{background:var(--header);padding:96px 24px;}
+  .faq .section-title{color:var(--white);margin-bottom:0;}
+  .faq-inner{max-width:1094px;margin:0 auto;padding-top:24px;}
+  .faq-item{border-top:0.8px solid var(--white);}
+  .faq-item:last-child{border-bottom:0.8px solid var(--white);}
+  .faq-q{width:100%;background:none;border:none;cursor:pointer;padding:26px 0;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--white);font-size:20px;font-family:'Inter',sans-serif;font-weight:600;text-align:left;}
+  .faq-icon{flex:0 0 42px;width:42px;height:42px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;position:relative;}
+  .faq-icon::before,.faq-icon::after{content:'';position:absolute;background:var(--white);}
+  .faq-icon::before{width:14px;height:2px;}
+  .faq-icon::after{width:2px;height:14px;transition:transform .2s ease;}
+  .faq-item.open .faq-icon::after{transform:scaleY(0);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .faq-item.open .faq-a{max-height:220px;}
+  .faq-a p{margin:0;padding:0 0 26px;color:#B4B4BC;font-size:15px;line-height:1.7;max-width:800px;}
+
+  .cta-section{padding:96px 24px;}
+  .cta-section .section-title{font-size:44px;}
+  .cta-section .accent{color:var(--purple);}
+  .cta-flex{max-width:1094px;margin:32px auto 0;display:flex;border-radius:24px;overflow:hidden;}
+  .cta-flex img{width:45%;object-fit:cover;}
+  .cta-form-card{flex:1;background:var(--back);padding:24px;display:flex;flex-direction:column;gap:4px;}
+  .cta-form-card h3{font-family:'Unbounded',sans-serif;font-size:20px;font-weight:700;}
+  .cta-form-card .sub{color:var(--main-text);font-size:14px;margin:6px 0 20px;}
+  .cta-form{display:flex;flex-direction:column;gap:12px;}
+  .cta-form .field{background:var(--white);border:0.67px solid var(--stroke);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;color:var(--main-text);font-size:14px;}
+  .cta-form .field input,.cta-form .field select{border:none;outline:none;background:transparent;width:100%;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
+  .cta-form .field select{color:var(--main-text);appearance:none;}
+  .cta-form .btn-primary{width:100%;}
+  .cta-fine{text-align:center;color:var(--main-text);font-size:12px;line-height:1.5;margin-top:4px;}
+
+  /* ---- mobile nav (hamburger) ---- */
+  .nav-toggle{display:none;flex-direction:column;justify-content:center;align-items:flex-end;gap:5px;width:38px;height:32px;padding:8px;background:none;border:none;cursor:pointer;flex:0 0 auto;}
+  .nav-toggle span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;}
+  .mobile-menu{display:none;flex-direction:column;background:var(--black,#111111);padding:8px 16px 20px;gap:2px;}
+  .mobile-menu a{color:#8B8B8B;font-size:15px;font-weight:500;font-family:'Inter',sans-serif;text-decoration:none;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,0.08);}
+  .mobile-menu .btn-primary{width:100%;margin-top:12px;}
+  .nav-wrap.menu-open .mobile-menu{display:flex;}
+
+  /* ---- footer copyright (mobile only) ---- */
+  .footer-copy{display:none;font-size:12px;color:var(--main-text);margin-top:8px;}
+
+  @media (max-width:960px){
+    .hero-copy h1{font-size:42px;}
+    .why-grid{grid-template-columns:1fr 1fr;}
+    .why-card.feature{grid-row:span 1;}
+    .cta-flex{flex-direction:column;}
+    .cta-flex img{width:100%;height:280px;}
+  }
+
+  @media (max-width:640px){
+    /* header / nav */
+    .nav-wrap{margin-bottom:0;}
+    .nav{background:var(--black,#111111);border-radius:0;box-shadow:none;padding:0 16px;height:56px;}
+    .logo{font-size:14px;}
+    .nav-links,.nav-actions{display:none;}
+    .nav-toggle{display:flex;}
+
+    /* hero */
+    .hero{padding:32px 16px 48px;}
+    .hero-inner{gap:24px;}
+    .hero-copy{gap:14px;}
+    .hero-copy h1{font-size:32px;line-height:1.25;}
+    .hero-copy p{font-size:14px;}
+    .hero-ctas{flex-direction:column;gap:12px;width:100%;}
+    .hero-ctas button{width:100%;}
+
+    .lead-card{padding:16px;border-radius:16px;}
+    .lead-form{flex-direction:column;gap:8px;}
+    .lead-form .field,.lead-form .btn-primary{width:100%;flex:1 1 auto;}
+    .lead-note{font-size:12px;}
+
+    /* why */
+    .why{padding:48px 16px;}
+    .why .section-title{font-size:24px;margin-bottom:24px;}
+    .why-grid{grid-template-columns:1fr;gap:12px;}
+    .why-card{padding:24px;padding-bottom:24px;min-height:0;gap:24px;}
+    .why-num{font-size:18px;font-family:'Inter',sans-serif;font-weight:600;}
+    .why-card h3{font-size:14px;margin-bottom:12px;}
+
+    /* how */
+    .how{padding:0 16px 48px;}
+    .how .section-title{font-size:24px;margin-bottom:24px;}
+    .how-inner{gap:16px;}
+    .how-step{padding:16px;border-radius:20px;gap:16px;}
+    .how-num{width:52px;height:52px;flex:0 0 52px;font-size:20px;}
+
+    /* faq */
+    .faq{padding:48px 16px;}
+    .faq .section-title{font-size:24px;}
+    .faq-q{font-size:16px;padding:20px 0;gap:12px;}
+    .faq-a p{font-size:14px;padding-bottom:20px;}
+
+    /* cta */
+    .cta-section{padding:48px 16px;}
+    .cta-section .section-title{font-size:24px;}
+    .cta-flex{border-radius:24px;outline:0.8px solid var(--stroke);outline-offset:-0.8px;}
+    .cta-flex img{height:200px;}
+    .cta-form-card{padding:24px;}
+    .cta-fine{font-size:12px;}
+
+    /* footer */
+    .footer-inner{flex-direction:column;align-items:flex-start;gap:24px;padding:32px 16px 24px;}
+    .footer-cols{flex-direction:column;gap:24px;width:100%;}
+    .footer-copy{display:block;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER =========================== -->
+<div class="nav-wrap">
+  <nav class="nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="nav-links">
+      <li><a href="#how">Подготовка</a></li>
+      <li><a href="#faq">Преподаватели</a></li>
+      <li><a href="#cta">Тарифы</a></li>
+      <li><a href="about.html#testimonials">Отзывы</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="btn-primary btn-pill">Записаться</button>
+      <!-- ===== АВАТАР ===== -->
+      <a href="/dashboard" class="nav-avatar" id="navAvatar" title="Личный кабинет">
+        <img src="/assets/Avatar.png" alt="Аватар пользователя" width="32" height="32" id="avatarImage">
+      </a>
+      <!-- ================= -->
+    </div>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+  <div class="mobile-menu">
+    <a href="#how">Подготовка</a>
+    <a href="#faq">Преподаватели</a>
+    <a href="#cta">Тарифы</a>
+    <a href="about.html#testimonials">Отзывы</a>
+    <a href="#faq">FAQ</a>
+    <button class="btn-primary">Записаться</button>
+    <a href="/dashboard" class="mobile-avatar">Личный кабинет</a>
+  </div>
+</div>
+<!-- ================================================================= -->
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <h1>Экзаметрика – ШКОЛА,<br>КОТОРАЯ <span class="accent">ГОТОВА НА ВСЁ,</span><br>РАДИ ТВОИХ БАЛЛОВ</h1>
+      <p>Онлайн-школа с харизматичными преподавателями, которые влюбляют в предмет с первого урока. ЕГЭ и ОГЭ для тех, кто хочет настоящий результат.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary">Записаться бесплатно</button>
+        <button class="btn-outline">Смотреть уроки</button>
+      </div>
+    </div>
+
+    <div class="lead-card">
+      <form class="lead-form" onsubmit="return false;">
+        <label class="field"><input type="text" placeholder="Имя"></label>
+        <label class="field">
+          <select>
+            <option value="" selected disabled>Класс</option>
+            <option>9 класс</option>
+            <option>10 класс</option>
+            <option>11 класс</option>
+          </select>
+        </label>
+        <label class="field"><input type="tel" placeholder="+7 (999) 000-00-00"></label>
+        <button type="submit" class="btn-primary">Записаться бесплатно</button>
+      </form>
+      <div class="lead-note">Нажимая на кнопку «Бесплатная консультация», вы соглашаетесь с <a href="#">политикой обработки персональных данных</a></div>
+    </div>
+  </div>
+</header>
+
+<section class="why" id="why">
+  <h2 class="section-title">Почему мы правильный выбор?</h2>
+  <div class="why-grid">
+    <div class="why-card feature">
+      <span class="why-num">01</span>
+      <div>
+        <h3>Все направления в одной подписке</h3>
+        <p>Не платишь отдельно за каждый курс – один тариф открывает доступ ко всем программам платформы</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <span class="why-num">02</span>
+      <div>
+        <h3>В 2–3 раза быстрее традиционного обучения</h3>
+        <p>Сравни наш подход с обычными курсами и убедись в разнице сам</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <span class="why-num">03</span>
+      <div>
+        <h3>Выбираешь наставника под свои цели</h3>
+        <p>На каждом направлении есть несколько экспертов-практиков. Не подошёл один – переходишь к другому в любой момент.</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <span class="why-num">04</span>
+      <div>
+        <h3>Живые проекты и разборы кейсов</h3>
+        <p>Практические задания с реальными данными длительностью 1–4 недели, после которых многие студенты получают первые офферы ещё во время учёбы</p>
+      </div>
+    </div>
+    <div class="why-card">
+      <span class="why-num">05</span>
+      <div>
+        <h3>Чем раньше стартуешь – тем больше выгода</h3>
+        <p>Получаешь доступ ко всем модулям без доплат за обновления курса</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <h2 class="section-title">Как это работает</h2>
+  <div class="how-inner">
+    <div class="how-step">
+      <div class="how-num">1</div>
+      <div class="how-text">
+        <h3>Готовишься с лучшими</h3>
+        <p>Занимаешься онлайн с харизматичными преподавателями в прямом эфире. Задаёшь вопросы, разбираешь сложные темы, делаешь домашние задания с проверкой.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">2</div>
+      <div class="how-text">
+        <h3>Участвуешь в пробных ЕГЭ</h3>
+        <p>Каждый месяц – полноценный пробный экзамен в формате ЕГЭ/ОГЭ. Привыкаешь к формату, тренируешь управление временем, видишь прогресс.</p>
+      </div>
+    </div>
+    <div class="how-step">
+      <div class="how-num">3</div>
+      <div class="how-text">
+        <h3>Получаешь высокий балл</h3>
+        <p>В день экзамена ты готов. Сдаёшь уверенно и поступаешь туда, куда мечтал. 220 000+ историй успеха – следующая будет твоей.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <h2 class="section-title">ВСЁ ЧТО ХОТЕЛ УЗНАТЬ</h2>
+  <div class="faq-inner">
+    <div class="faq-item">
+      <button class="faq-q"><span>Что такое Экзаметрика?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Экзаметрика — онлайн-школа подготовки к ЕГЭ и ОГЭ с 9-летним опытом и более чем 220 000 учеников, прошедших курс.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>В каком формате проходят занятия?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Занятия проходят онлайн в прямом эфире с преподавателем: можно задавать вопросы в моменте и получать обратную связь по домашним заданиям.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Что входит в годовой курс?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Полная программа предмета, ежемесячные пробные экзамены, проверка домашних заданий и доступ ко всем обновлениям курса без доплат.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Можно записаться в середине учебного года?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Да, запись открыта в любое время — программа построена так, чтобы можно было быстро наверстать пройденные темы.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>На сколько баллов можно вырасти?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Рост зависит от стартового уровня и вовлечённости, но регулярные пробные экзамены помогают отслеживать прогресс каждый месяц.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Есть ли рассрочка?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Да, оплату можно разбить на несколько платежей — подробности уточняйте у менеджера при записи.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q"><span>Есть ли гарантия результата?</span><span class="faq-icon"></span></button>
+      <div class="faq-a"><p>Мы даём чёткую структуру подготовки и регулярный контроль прогресса, чтобы результат зависел только от системной работы, а не от случая.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <h2 class="section-title">ЗАПИШИСЬ НА ГОДОВОЙ<br>КУРС <span class="accent">ЕГЭ</span> СЕЙЧАС</h2>
+  <div class="cta-flex">
+    <img src="https://placehold.co/563x393" alt="Студент на занятии">
+    <div class="cta-form-card">
+      <h3>Оставь заявку</h3>
+      <p class="sub">Ответим в течение 5 минут</p>
+      <form class="cta-form" onsubmit="return false;">
+        <label class="field">
+          <select>
+            <option value="" selected disabled>Выбери предмет</option>
+            <option>Русский язык</option>
+            <option>Математика</option>
+            <option>Обществознание</option>
+            <option>Физика</option>
+          </select>
+        </label>
+        <label class="field"><input type="text" placeholder="Твое имя"></label>
+        <label class="field"><input type="tel" placeholder="Номер телефона"></label>
+        <button type="submit" class="btn-primary">Записаться бесплатно</button>
+        <div class="cta-fine">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+      <div class="footer-copy">© 2026 Экзаметрика. Все права защищены.</div>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="#">Преподаватели</a>
+        <a href="#">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="#">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+<script>
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    item.querySelector('.faq-q').addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(el){ el.classList.remove('open'); });
+      if(!isOpen){ item.classList.add('open'); }
+    });
+  });
+
+  // close mobile menu when a link inside it is clicked
+  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.querySelector('.nav-wrap').classList.remove('menu-open');
+    });
+  });
+</script>
+
+</body>
+</html>

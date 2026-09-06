@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Регистрация — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Auth ---- */
+  .auth-page {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0F172A 32%, #1E3A5F 81%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+  }
+
+  .auth-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 40px 32px 32px;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .auth-card h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--header);
+    text-align: center;
+    margin: 0;
+  }
+
+  .auth-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 12px;
+    font-weight: 400;
+    color: #646464;
+    line-height: 18px;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    height: 52px;
+    padding: 0 16px;
+    background: var(--back);
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    color: var(--header);
+    outline: none;
+    transition: box-shadow 0.2s ease;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    box-shadow: 0 0 0 2px var(--green);
+  }
+
+  .form-group input::placeholder {
+    color: rgba(107, 107, 122, 0.5);
+  }
+
+  .form-group select {
+    appearance: none;
+    cursor: pointer;
+    color: var(--main-text);
+  }
+
+  .btn-auth {
+    width: 100%;
+    padding: 12px 25px;
+    background: var(--green);
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--black);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .btn-auth:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(117, 234, 21, 0.35);
+  }
+
+  .btn-auth:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .auth-switch {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--main-text);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px 25px;
+    border-radius: 100px;
+    transition: background 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+  }
+
+  .auth-switch:hover {
+    background: rgba(0, 0, 0, 0.04);
+  }
+
+  .auth-error {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border: 1px solid #FCA5A5;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .auth-error.visible {
+    display: block;
+  }
+
+  .auth-success {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #6EE7B7;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    display: none;
+  }
+
+  .auth-success.visible {
+    display: block;
+  }
+
+  .password-hint {
+    font-size: 12px;
+    color: var(--main-text);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  @media (max-width: 480px) {
+    .auth-card {
+      padding: 32px 20px 24px;
+    }
+
+    .auth-card h2 {
+      font-size: 20px;
+    }
+
+    .form-group input,
+    .form-group select {
+      height: 46px;
+      font-size: 13px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== REGISTER PAGE =========================== -->
+<div class="auth-page">
+  <div class="auth-card">
+    <h2>Регистрация</h2>
+
+    <form class="auth-form" id="registerForm">
+      <div class="auth-error" id="registerError"></div>
+      <div class="auth-success" id="registerSuccess"></div>
+
+      <div class="form-group">
+        <label for="registerName">Ваше имя и фамилия</label>
+        <input type="text" id="registerName" placeholder="Иван Иванов" required autocomplete="name">
+      </div>
+
+      <div class="form-group">
+        <label for="registerEmail">Введите ваш email</label>
+        <input type="email" id="registerEmail" placeholder="example@mail.ru" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="registerGrade">Ваш класс</label>
+        <select id="registerGrade" required>
+          <option value="">Выберите класс</option>
+          <option value="9">9 класс</option>
+          <option value="10">10 класс</option>
+          <option value="11">11 класс</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="registerPassword">Придумайте пароль</label>
+        <input type="password" id="registerPassword" placeholder="Минимум 6 символов" minlength="6" required autocomplete="new-password">
+        <div class="password-hint">Пароль должен содержать минимум 6 символов</div>
+      </div>
+
+      <button type="submit" class="btn-auth" id="registerSubmit">Зарегистрироваться</button>
+    </form>
+
+    <button class="auth-switch" onclick="window.location.href='login.html'">
+      Уже есть аккаунт? Войти
+    </button>
+  </div>
+</div>
+
+<!-- =========================== SCRIPT =========================== -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const errorEl = document.getElementById('registerError');
+    const successEl = document.getElementById('registerSuccess');
+    const submitBtn = document.getElementById('registerSubmit');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Скрываем старые сообщения
+      errorEl.classList.remove('visible');
+      successEl.classList.remove('visible');
+      errorEl.textContent = '';
+      successEl.textContent = '';
+
+      // Получаем данные
+      const fullName = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const grade = document.getElementById('registerGrade').value;
+      const password = document.getElementById('registerPassword').value.trim();
+
+      // Валидация
+      if (!fullName || !email || !password || !grade) {
+        errorEl.textContent = 'Пожалуйста, заполните все поля.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      if (fullName.length < 3) {
+        errorEl.textContent = 'Имя должно содержать минимум 3 символа.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      if (!email.includes('@') || !email.includes('.')) {
+        errorEl.textContent = 'Пожалуйста, введите корректный email.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      if (password.length < 6) {
+        errorEl.textContent = 'Пароль должен содержать минимум 6 символов.';
+        errorEl.classList.add('visible');
+        return;
+      }
+
+      // Отправка
+      submitBtn.textContent = 'Регистрация...';
+      submitBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password,
+            fullName: fullName,
+            grade: parseInt(grade),
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.ok) {
+          throw new Error(data.error?.message || 'Ошибка регистрации');
+        }
+
+        // Успех!
+        successEl.textContent = 'Регистрация успешна! Перенаправляем на вход...';
+        successEl.classList.add('visible');
+
+        // Сохраняем токен, если пришел
+        if (data.data?.token) {
+          document.cookie = `session_token=${data.data.token}; path=/; max-age=86400`;
+        }
+
+        // Перенаправляем через 1.5 секунды
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1500);
+
+      } catch (error) {
+        errorEl.textContent = error.message || 'Ошибка при регистрации. Попробуйте позже.';
+        errorEl.classList.add('visible');
+      } finally {
+        submitBtn.textContent = 'Зарегистрироваться';
+        submitBtn.disabled = false;
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

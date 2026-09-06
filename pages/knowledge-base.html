@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>База знаний — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Knowledge base ---- */
+  .kb{display:flex;flex-direction:column;gap:32px;padding-top:48px;}
+
+  .kb-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
+  .kb-head h2{font-size:32px;font-weight:600;}
+  .kb-head .sub{color:var(--main-text);font-size:14px;margin-top:8px;}
+  .kb-head-stats{display:flex;gap:12px;flex-wrap:wrap;}
+
+  .search-card{display:flex;flex-direction:column;gap:16px;padding:24px;}
+  .search-row{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;}
+  .search-input{
+    flex:1 1 300px;
+    display:flex;align-items:center;gap:10px;
+    padding:16px;border-radius:14px;
+    outline:1px solid var(--stroke);outline-offset:-1px;
+  }
+  .search-input input{border:none;outline:none;background:transparent;flex:1;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
+  .search-input input::placeholder{color:var(--main-text);}
+  .filter-btn,.sort-chip{
+    padding:14px 20px;background:var(--back);border-radius:14px;
+    display:flex;align-items:center;gap:8px;color:var(--main-text);font-size:14px;font-weight:500;white-space:nowrap;
+  }
+  .subject-pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .pill-filter{padding:8px 16px;border-radius:100px;font-size:14px;font-weight:500;background:var(--white);color:var(--main-text);border:none;cursor:pointer;}
+  .pill-filter.active{background:var(--black);color:var(--white);}
+
+  .subject-section{display:flex;flex-direction:column;gap:24px;}
+  .subject-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .subject-header .left{display:flex;align-items:center;gap:12px;}
+  .subject-dot{width:12px;height:12px;border-radius:50%;flex:none;}
+  .subject-header h3{font-size:20px;font-weight:700;font-family:'Inter',sans-serif;}
+  .count-pill{padding:4px 10px;background:var(--back);border-radius:100px;font-size:13px;font-weight:500;color:var(--main-text);}
+  .see-all{color:var(--blue);font-size:14px;font-weight:700;}
+
+  .material-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .material-card{background:var(--white);border:1px solid var(--stroke);border-radius:20px;padding:24px 26px 24px 24px;display:flex;flex-direction:column;gap:20px;}
+  .type-badge{align-self:flex-start;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;}
+  .type-badge .icon{font-size:13px;}
+  .type-default{background:var(--back);color:#4E4E5E;}
+  .type-test{background:var(--status-done-bg);color:#4E4E5E;}
+  .type-task{background:var(--back);color:#4E4E5E;}
+  .type-video{background:var(--video-bg);color:var(--blue);}
+  .material-title{font-size:14px;font-weight:700;line-height:1.7;color:#101828;min-height:48px;}
+  .material-tag{display:flex;align-items:center;gap:6px;}
+  .material-tag .dot{width:8px;height:8px;border-radius:50%;flex:none;}
+  .material-tag span{font-size:13px;color:var(--main-text);}
+  .material-meta{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--back);font-size:12px;font-weight:500;color:var(--main-text);}
+
+  @media (max-width:960px){.material-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:640px){
+    .material-grid{grid-template-columns:1fr;}
+    .kb-head-stats{width:100%;}
+    .mini-stat{min-width:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html">Мое обучение</a></li>
+      <li><a href="#">Расписание</a></li>
+      <li><a href="knowledge-base.html" class="active">База знаний</a></li>
+      <li><a href="#">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge">85 баллов</span>
+      <img class="avatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<div class="breadcrumb-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">Главная</a>
+    <span class="sep">›</span>
+    <a href="dashboard.html">Мое обучение</a>
+    <span class="sep">›</span>
+    <span class="current">База знаний</span>
+  </div>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container">
+  <div class="kb">
+
+    <!-- DYNAMIC: library totals for the current user -->
+    <div class="card kb-head">
+      <div>
+        <h2>База знаний</h2>
+        <div class="sub">Конспекты, тесты и видеоматериалы по всем дисциплинам ЕГЭ</div>
+      </div>
+      <div class="kb-head-stats">
+        <div class="mini-stat"><span class="num" style="color:var(--purple)">148</span><span class="label">Материалов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--blue)">7</span><span class="label">Предметов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--green)">42</span><span class="label">Просмотрено</span></div>
+      </div>
+    </div>
+
+    <!-- Search + filters — client-side today, will hit a search endpoint later -->
+    <div class="card search-card">
+      <div class="search-row">
+        <label class="search-input">
+          🔍<input type="text" placeholder="Найти материал, тему или предмет...">
+        </label>
+        <div class="filter-btn">▤ Фильтры</div>
+        <div class="sort-chip">По дате ▾</div>
+      </div>
+      <div class="subject-pills">
+        <button class="pill-filter active" data-subject="all">Все</button>
+        <button class="pill-filter" data-subject="math">Математика</button>
+        <button class="pill-filter" data-subject="russian">Русский язык</button>
+        <button class="pill-filter" data-subject="social">Обществознание</button>
+        <button class="pill-filter" data-subject="physics">Физика</button>
+        <button class="pill-filter" data-subject="history">История</button>
+        <button class="pill-filter" data-subject="biology">Биология</button>
+      </div>
+    </div>
+
+    <!-- DYNAMIC: one subject-section per subject, each looping its material-card list -->
+
+    <div class="subject-section" data-subject="math">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#8A15EA"></span>
+          <h3>Математика</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Производная и ее применение</div>
+          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
+          <div class="material-meta"><span>24 заданий</span><span>45 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
+          <div class="material-title">Тригонометрические уравнения</div>
+          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
+          <div class="material-meta"><span>15 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-task"><span class="icon">📝</span>Задания</span>
+          <div class="material-title">Геометрия: планиметрия. Часть 2</div>
+          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
+          <div class="material-meta"><span>32 задания</span><span>45 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+    <div class="subject-section" data-subject="russian">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#75EA15"></span>
+          <h3>Русский язык</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
+          <div class="material-title">Лексика и фразеология ЕГЭ</div>
+          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
+          <div class="material-meta"><span>14 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Алгоритм написания сочинения 27</div>
+          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
+          <div class="material-meta"><span>24 заданий</span><span>45 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
+          <div class="material-title">Пунктуация: сложные случаи</div>
+          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
+          <div class="material-meta"><span>20 заданий</span><span>50 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+    <div class="subject-section" data-subject="social">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#2B7FFF"></span>
+          <h3>Обществознание</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
+          <div class="material-title">Социальные нормы и институты</div>
+          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
+          <div class="material-meta"><span>22 задания</span><span>45 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Правовая система РФ</div>
+          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
+          <div class="material-meta"><span>22 задания</span><span>35 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
+          <div class="material-title">Экономика: основные понятия</div>
+          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
+          <div class="material-meta"><span>10 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+    <div class="subject-section" data-subject="physics">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#F04438"></span>
+          <h3>Физика</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Механика: кинематика и динамика</div>
+          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
+          <div class="material-meta"><span>22 задания</span><span>25 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
+          <div class="material-title">Электродинамика: законы</div>
+          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
+          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Термодинамика: задачи ЕГЭ</div>
+          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
+          <div class="material-meta"><span>15 заданий</span><span>35 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+    <div class="subject-section" data-subject="history">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#F79009"></span>
+          <h3>История</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
+          <div class="material-title">Россия в XX веке: ключевые события</div>
+          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
+          <div class="material-meta"><span>22 задания</span><span>25 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
+          <div class="material-title">Исторические личности: таблица</div>
+          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
+          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
+          <div class="material-title">Культура России: хронология</div>
+          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
+          <div class="material-meta"><span>15 заданий</span><span>35 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+    <div class="subject-section" data-subject="biology">
+      <div class="subject-header">
+        <div class="left">
+          <span class="subject-dot" style="background:#12B76A"></span>
+          <h3>Биология</h3>
+          <span class="count-pill">3 материала</span>
+        </div>
+        <a href="#" class="see-all">Все материалы →</a>
+      </div>
+      <div class="material-grid">
+        <article class="material-card">
+          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
+          <div class="material-title">Клетка: строение и функции</div>
+          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
+          <div class="material-meta"><span>22 задания</span><span>35 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-task"><span class="icon">📝</span>Задания</span>
+          <div class="material-title">Генетика: законы Менделя + задачи</div>
+          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
+          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+        <article class="material-card">
+          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
+          <div class="material-title">Эволюция: теории и доказательства</div>
+          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
+          <div class="material-meta"><span>10 заданий</span><span>50 мин</span></div>
+          <button class="btn-soft">Открыть</button>
+        </article>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="#">Преподаватели</a>
+        <a href="#">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="#">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

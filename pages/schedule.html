@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Расписание — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Schedule ---- */
+  .sched{display:flex;flex-direction:column;gap:24px;padding-top:48px;}
+
+  .sched-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
+  .sched-head h2{font-size:32px;font-weight:600;}
+  .sched-head .sub{color:var(--main-text);font-size:14px;margin-top:8px;}
+  .sched-head-stats{display:flex;gap:12px;flex-wrap:wrap;}
+
+  .week-nav{display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--white);border:0.67px solid var(--stroke);border-radius:20px;}
+  .week-nav .label{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;}
+  .nav-arrow{width:36px;height:36px;background:var(--back);border-radius:10px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--main-text);}
+  .nav-arrow:hover{background:#e9eaec;}
+
+  .schedule-wrap{overflow-x:auto;}
+  .schedule-grid{
+    display:grid;
+    grid-template-columns:56px repeat(6, minmax(120px,1fr));
+    min-width:920px;
+  }
+  .day-head{grid-row:1;text-align:center;padding:12px 4px;border-bottom:1px solid var(--stroke);}
+  .day-head.today{background:var(--back);border-radius:10px 10px 0 0;}
+  .day-head .dow{font-size:12px;color:var(--main-text);font-weight:500;}
+  .day-head .date{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;margin-top:2px;}
+  .time-cell{grid-column:1;display:flex;align-items:flex-start;justify-content:flex-end;padding:8px 8px 0 0;font-size:12px;color:#AAAAAA;border-top:1px solid var(--stroke);height:64px;}
+  .day-col-bg{border-top:1px solid var(--stroke);border-left:1px solid var(--stroke);height:64px;}
+
+  .event{
+    margin:2px 4px;
+    padding:8px;
+    background:var(--white);
+    border-radius:10px;
+    border:1px solid var(--event-color, var(--purple));
+    display:flex;flex-direction:column;gap:4px;
+    font-size:12px;
+    overflow:hidden;
+  }
+  .event .title{font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:var(--black);}
+  .event .teacher{color:var(--main-text);font-size:12px;}
+  .event .badge{align-self:flex-start;padding:3px 10px;background:var(--video-bg);color:var(--blue);border-radius:100px;font-size:10px;font-weight:700;}
+
+  @media (max-width:640px){
+    .sched-head-stats{width:100%;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html">Мое обучение</a></li>
+      <li><a href="schedule.html" class="active">Расписание</a></li>
+      <li><a href="knowledge-base.html">База знаний</a></li>
+      <li><a href="support.html">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge">85 баллов</span>
+      <img class="avatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<div class="breadcrumb-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">Главная</a>
+    <span class="sep">›</span>
+    <a href="dashboard.html">Мое обучение</a>
+    <span class="sep">›</span>
+    <span class="current">Расписание</span>
+  </div>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container">
+  <div class="sched">
+
+    <!-- DYNAMIC: current week's stats for the logged-in user -->
+    <div class="card sched-head">
+      <div>
+        <h2>Расписание</h2>
+        <div class="sub" id="week-range-label">25 авг – 30 авг 2026</div>
+      </div>
+      <div class="sched-head-stats">
+        <div class="mini-stat"><span class="num" style="color:var(--purple)">16</span><span class="label">Занятий в неделю</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--blue)">20</span><span class="label">Часов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--green)">2</span><span class="label">Выполнено</span></div>
+      </div>
+    </div>
+
+    <!-- Week navigator — will call an endpoint for the selected week's lessons later -->
+    <div class="week-nav">
+      <button class="nav-arrow" aria-label="Предыдущая неделя">‹</button>
+      <span class="label">25 авг – 30 авг 2026</span>
+      <button class="nav-arrow" aria-label="Следующая неделя">›</button>
+    </div>
+
+    <!-- DYNAMIC: lessons for the selected week, loop over .event, positioned by day + hour -->
+    <div class="card schedule-wrap">
+      <div class="schedule-grid">
+        <div class="day-head" style="grid-column:2"><div class="dow">Пн</div><div class="date">25</div></div>
+        <div class="day-head" style="grid-column:3"><div class="dow">Вт</div><div class="date">26</div></div>
+        <div class="day-head" style="grid-column:4"><div class="dow">Ср</div><div class="date">27</div></div>
+        <div class="day-head today" style="grid-column:5"><div class="dow">Чт</div><div class="date">28</div></div>
+        <div class="day-head" style="grid-column:6"><div class="dow">Пт</div><div class="date">29</div></div>
+        <div class="day-head" style="grid-column:7"><div class="dow">Сб</div><div class="date">30</div></div>
+
+        <!-- hour grid background: 1 time label + 6 day cells per hour row -->
+        <template id="hours-template">9:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00</template>
+        <div class="time-cell" style="grid-row:2">9:00</div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:2;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:3">10:00</div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:3;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:4">11:00</div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:4;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:5">12:00</div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:5;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:6">13:00</div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:6;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:7">14:00</div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:7;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:8">15:00</div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:8;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:9">16:00</div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:9;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:10">17:00</div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:10;grid-column:7"></div>
+
+        <div class="time-cell" style="grid-row:11">18:00</div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:2"></div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:3"></div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:4"></div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:5"></div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:6"></div>
+        <div class="day-col-bg" style="grid-row:11;grid-column:7"></div>
+
+        <!-- lesson events -->
+        <div class="event" style="grid-column:2;grid-row:2 / span 2;--event-color:#8A15EA;">
+          <span class="title">Математика</span>
+          <span class="teacher">Иванова М. С.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+        <div class="event" style="grid-column:3;grid-row:4 / span 2;--event-color:#F04438;">
+          <span class="title">Физика</span>
+          <span class="teacher">Сидоров А. Н.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+        <div class="event" style="grid-column:4;grid-row:6 / span 2;--event-color:#2B7FFF;">
+          <span class="title">Обществознание</span>
+          <span class="teacher">Волков С. П.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+        <div class="event" style="grid-column:5;grid-row:4 / span 2;--event-color:#8A15EA;">
+          <span class="title">Математика</span>
+          <span class="teacher">Иванова М. С.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+        <div class="event" style="grid-column:6;grid-row:8 / span 2;--event-color:#75EA15;">
+          <span class="title">Русский язык</span>
+          <span class="teacher">Петрова Л. А.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+        <div class="event" style="grid-column:7;grid-row:7 / span 2;--event-color:#8A15EA;">
+          <span class="title">Математика</span>
+          <span class="teacher">Иванова М. С.</span>
+          <span class="badge">Вебинар</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="support.html">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+</body>
+</html>

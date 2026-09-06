@@ -1,0 +1,35 @@
+# .htaccess
+RewriteEngine On
+# Для локальной разработки — корень сайта
+RewriteBase /
+
+# API маршруты
+RewriteRule ^api/auth/login/?$ api/auth/login.php [L,QSA]
+RewriteRule ^api/auth/register/?$ api/auth/register.php [L,QSA]
+RewriteRule ^api/auth/logout/?$ api/auth/logout.php [L,QSA]
+RewriteRule ^api/auth/me/?$ api/auth/me.php [L,QSA]
+RewriteRule ^api/materials/?$ api/materials.php [L,QSA]
+RewriteRule ^api/materials/view/?$ api/materials-view.php [L,QSA]
+RewriteRule ^api/schedule/?$ api/schedule.php [L,QSA]
+RewriteRule ^api/assignments/?$ api/assignments.php [L,QSA]
+RewriteRule ^api/support/?$ api/support.php [L,QSA]
+RewriteRule ^api/applications/?$ api/applications.php [L,QSA]
+RewriteRule ^api/user/?$ api/user.php [L,QSA]
+
+# Страницы
+RewriteRule ^$ index.html [L]
+RewriteRule ^about.html/?$ pages/about.html [L]
+RewriteRule ^blog.html/?$ pages/blog.html [L]
+RewriteRule ^dashboard.html/?$ pages/dashboard.html [L]
+RewriteRule ^knowledge-base.html/?$ pages/knowledge-base.html [L]
+RewriteRule ^schedule.html/?$ pages/schedule.html [L]
+RewriteRule ^support.html/?$ pages/support.html [L]
+RewriteRule ^teachers.html/?$ pages/teachers.html [L]
+RewriteRule ^login.html/?$ pages/login.html [L]
+RewriteRule ^register.html/?$ pages/register.html [L]
+RewriteRule ^privacy.html/?$ pages/privacy.html [L]
+
+# Если файл не существует — 404
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ 404.html [L]

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поддержка — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Support ---- */
+  .support{display:flex;flex-direction:column;gap:24px;padding-top:48px;}
+  .support h2{font-size:48px;font-weight:900;}
+
+  .support-row{display:flex;gap:32px;flex-wrap:wrap;align-items:flex-start;}
+
+  /* chat card */
+  .chat-card{flex:1 1 420px;max-width:644px;background:var(--white);border:1px solid var(--stroke);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;height:560px;}
+  .chat-header{background:var(--black);padding:16px 20px;display:flex;align-items:center;gap:12px;}
+  .chat-header .avatar-wrap{position:relative;flex:none;}
+  .chat-header img{width:40px;height:40px;border-radius:50%;}
+  .chat-header .status-dot{position:absolute;right:-1px;bottom:-1px;width:10px;height:10px;background:var(--green-alt);border-radius:50%;border:2px solid var(--black);}
+  .chat-header .name{color:var(--white);font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;}
+  .chat-header .status{color:var(--green-alt);font-size:12px;margin-top:2px;}
+
+  .chat-body{flex:1;padding:16px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
+  .msg{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+  .msg .bubble{padding:12px;background:var(--back);border-radius:16px 16px 16px 4px;font-size:14px;line-height:1.7;color:var(--black);max-width:80%;}
+  .msg .time{color:#AAAAAA;font-size:12px;}
+
+  .chat-input-row{border-top:1px solid #F0F0F0;padding:12px 16px;display:flex;align-items:center;gap:8px;}
+  .chat-input-row input{flex:1;padding:10px 14px;background:var(--back);border-radius:12px;border:none;outline:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
+  .chat-input-row input::placeholder{color:rgba(17,17,17,0.5);}
+  .chat-send{width:40px;height:40px;background:var(--back);border-radius:12px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#BBBBBB;font-size:16px;flex:none;}
+  .chat-send:hover{background:#e9eaec;}
+
+  /* FAQ card */
+  .faq-card{flex:1 1 420px;max-width:644px;background:var(--white);border:1px solid var(--stroke);border-radius:20px;padding:24px;}
+  .faq-card h3{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;}
+  .faq-card .sub{color:var(--main-text);font-size:14px;margin-top:4px;}
+  .support-faq-list{margin-top:8px;}
+  .support-faq-item{border-bottom:0.67px solid #F0F0F0;}
+  .support-faq-item:last-child{border-bottom:none;}
+  .support-faq-q{width:100%;background:none;border:none;cursor:pointer;padding:20px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;text-align:left;}
+  .support-faq-q span{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;color:var(--black);}
+  .support-faq-toggle{width:32px;height:32px;background:var(--back);border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--black);transition:transform .2s ease;}
+  .support-faq-item.open .support-faq-toggle{transform:rotate(45deg);}
+  .support-faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .support-faq-item.open .support-faq-a{max-height:200px;}
+  .support-faq-a p{margin:0;padding:0 0 20px;color:var(--main-text);font-size:14px;line-height:1.7;}
+
+  @media (max-width:640px){
+    .support h2{font-size:34px;}
+    .chat-card{height:480px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html">Мое обучение</a></li>
+      <li><a href="schedule.html">Расписание</a></li>
+      <li><a href="knowledge-base.html">База знаний</a></li>
+      <li><a href="support.html" class="active">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge">85 баллов</span>
+      <img class="avatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<div class="breadcrumb-wrap">
+  <div class="breadcrumb">
+    <a href="index.html">Главная</a>
+    <span class="sep">›</span>
+    <a href="dashboard.html">Мое обучение</a>
+    <span class="sep">›</span>
+    <span class="current">Поддержка</span>
+  </div>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container">
+  <div class="support">
+    <h2>Поддержка</h2>
+
+    <div class="support-row">
+
+      <!-- DYNAMIC: live chat — messages loop over .msg, will connect to a real chat/WS backend -->
+      <div class="chat-card">
+        <div class="chat-header">
+          <div class="avatar-wrap">
+            <img src="https://placehold.co/40x40" alt="Анна Смирнова">
+            <span class="status-dot"></span>
+          </div>
+          <div>
+            <div class="name">Анна Смирнова</div>
+            <div class="status">● Онлайн – отвечает за 5 мин</div>
+          </div>
+        </div>
+        <div class="chat-body">
+          <div class="msg">
+            <div class="bubble">Привет! Я Анна, ваш личный куратор. Чем могу помочь?</div>
+            <span class="time">10:02</span>
+          </div>
+          <div class="msg">
+            <div class="bubble">Можете задать любой вопрос по учебе, расписанию или платформе.</div>
+            <span class="time">10:02</span>
+          </div>
+        </div>
+        <form class="chat-input-row" onsubmit="return false;">
+          <input type="text" placeholder="Напишите сообщение...">
+          <button type="submit" class="chat-send" aria-label="Отправить">➤</button>
+        </form>
+      </div>
+
+      <!-- DYNAMIC: FAQ entries — loop over .support-faq-item -->
+      <div class="faq-card">
+        <h3>Частые вопросы</h3>
+        <div class="sub">Ответы на самые популярные обращения</div>
+        <div class="support-faq-list">
+          <div class="support-faq-item">
+            <button class="support-faq-q"><span>Как перенести занятие?</span><span class="support-faq-toggle">+</span></button>
+            <div class="support-faq-a"><p>Откройте занятие в «Расписании» и нажмите «Перенести» — доступные слоты покажутся автоматически. Изменить время можно не позднее чем за 3 часа до начала.</p></div>
+          </div>
+          <div class="support-faq-item">
+            <button class="support-faq-q"><span>Как получить доступ к записям уроков?</span><span class="support-faq-toggle">+</span></button>
+            <div class="support-faq-a"><p>Все записи появляются в разделе «База знаний» в течение часа после занятия и хранятся там весь срок обучения.</p></div>
+          </div>
+          <div class="support-faq-item">
+            <button class="support-faq-q"><span>Что делать, если я не понял тему?</span><span class="support-faq-toggle">+</span></button>
+            <div class="support-faq-a"><p>Напишите куратору в чат слева — он подберёт дополнительный материал или запишет вас на разбор темы с преподавателем.</p></div>
+          </div>
+          <div class="support-faq-item">
+            <button class="support-faq-q"><span>Как оплатить следующий месяц?</span><span class="support-faq-toggle">+</span></button>
+            <div class="support-faq-a"><p>Ссылка на оплату приходит на почту за 5 дней до списания. Оплатить также можно в личном кабинете в разделе «Тариф».</p></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="support.html">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+<script>
+  document.querySelectorAll('.support-faq-item').forEach(function(item){
+    item.querySelector('.support-faq-q').addEventListener('click', function(){
+      var isOpen = item.classList.contains('open');
+      document.querySelectorAll('.support-faq-item.open').forEach(function(el){ el.classList.remove('open'); });
+      if(!isOpen){ item.classList.add('open'); }
+    });
+  });
+
+  // Placeholder submit handler — will POST to the chat backend later.
+  document.querySelector('.chat-input-row').addEventListener('submit', function(e){
+    e.preventDefault();
+    var input = this.querySelector('input');
+    var body = this.closest('.chat-card').querySelector('.chat-body');
+    var text = input.value.trim();
+    if(!text) return;
+    var msg = document.createElement('div');
+    msg.className = 'msg';
+    msg.style.alignItems = 'flex-end';
+    msg.style.marginLeft = 'auto';
+    msg.innerHTML = '<div class="bubble" style="background:#111111;color:white;border-radius:16px 16px 4px 16px;">' + text.replace(/</g,'&lt;') + '</div><span class="time">Сейчас</span>';
+    body.appendChild(msg);
+    body.scrollTop = body.scrollHeight;
+    input.value = '';
+  });
+</script>
+
+</body>
+</html>

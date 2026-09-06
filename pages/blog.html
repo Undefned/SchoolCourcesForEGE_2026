@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Блог — Экзаметрика</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles/style.css">
+<style>
+  /* ---- page-specific: Blog ---- */
+  .blog{display:flex;flex-direction:column;gap:32px;padding-top:48px;}
+  .blog h2{font-size:48px;font-weight:900;}
+
+  .featured-post{
+    background:var(--white);border-radius:24px;overflow:hidden;
+    display:flex;align-items:center;gap:48px;
+  }
+  .featured-post img{width:44%;min-height:280px;height:100%;object-fit:cover;flex:none;}
+  .featured-post .content{padding:32px 40px 32px 0;display:flex;flex-direction:column;gap:24px;}
+  .featured-post h3{font-size:24px;font-weight:900;line-height:1.35;}
+  .featured-post p{margin:0;color:var(--main-text);font-size:14px;line-height:1.7;}
+
+  .post-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .post-card{background:var(--white);border:1px solid var(--stroke);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;}
+  .post-card img{width:100%;height:200px;object-fit:cover;background:#D0D0DA;}
+  .post-card .content{padding:20px;display:flex;flex-direction:column;gap:12px;}
+  .category-pill{align-self:flex-start;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:500;}
+  .category-results{background:#D9FFD9;color:#1A801A;}
+  .category-team{background:#FFE3E1;color:var(--red);}
+  .category-company{background:#F1E0FF;color:var(--purple);}
+  .post-card h4{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;line-height:1.55;}
+  .post-card p{margin:0;color:var(--main-text);font-size:13px;line-height:1.6;}
+
+  @media (max-width:960px){
+    .featured-post{flex-direction:column;align-items:stretch;}
+    .featured-post img{width:100%;height:280px;}
+    .featured-post .content{padding:0 24px 24px;}
+    .post-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:640px){
+    .blog h2{font-size:34px;}
+    .post-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<div class="app-nav-wrap">
+  <nav class="app-nav">
+    <span class="logo">Экзаметрика</span>
+    <ul class="app-nav-links">
+      <li><a href="dashboard.html">Мое обучение</a></li>
+      <li><a href="schedule.html">Расписание</a></li>
+      <li><a href="knowledge-base.html">База знаний</a></li>
+      <li><a href="support.html">Поддержка</a></li>
+    </ul>
+    <div class="app-nav-actions">
+      <span class="score-badge">85 баллов</span>
+      <img class="avatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+    </div>
+  </nav>
+</div>
+<!-- ================================================================================================ -->
+
+<main class="app-container" style="padding-top:48px;">
+  <div class="blog">
+    <h2>Блог</h2>
+
+    <!-- DYNAMIC: featured/latest post -->
+    <a href="#" style="text-decoration:none;color:inherit;">
+      <div class="featured-post">
+        <img src="https://placehold.co/523x426" alt="Команда Экзаметрики">
+        <div class="content">
+          <h3>Нам 9 лет: как маленький стартап стал школой для 220 000 учеников</h3>
+          <p>Собрали всю команду – 47 человек из 12 городов – на один уик-энд в Москве. Смеялись, вспоминали первые уроки в Zoom и строили планы на следующие девять лет. Рассказываем все как есть.</p>
+        </div>
+      </div>
+    </a>
+
+    <!-- DYNAMIC: recent posts, loop over .post-card -->
+    <div class="post-grid">
+      <a href="#" style="text-decoration:none;color:inherit;">
+        <article class="post-card">
+          <img src="https://placehold.co/341x200" alt="">
+          <div class="content">
+            <span class="category-pill category-results">Результаты</span>
+            <h4>ЕГЭ-2026: средний балл наших учеников – 86. Рекорд за всё время</h4>
+            <p>Трое получили 100 баллов по математике. Разбираем, что изменилось в подготовке.</p>
+          </div>
+        </article>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;">
+        <article class="post-card">
+          <img src="https://placehold.co/341x200" alt="">
+          <div class="content">
+            <span class="category-pill category-team">Команда</span>
+            <h4>Дмитрий Козлов: «Историю нельзя зазубрить – её нужно понять»</h4>
+            <p>Интервью с преподавателем, который готовит к ЕГЭ уже 12 лет и ведёт авторский курс.</p>
+          </div>
+        </article>
+      </a>
+      <a href="#" style="text-decoration:none;color:inherit;">
+        <article class="post-card">
+          <img src="https://placehold.co/341x200" alt="">
+          <div class="content">
+            <span class="category-pill category-company">Жизнь компании</span>
+            <h4>ЕГЭ-2026: средний балл наших учеников – 86. Рекорд за всё время</h4>
+            <p>Трое получили 100 баллов по математике. Разбираем, что изменилось в подготовке.</p>
+          </div>
+        </article>
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="logo">Экзаметрика</span>
+      <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+    </div>
+    <div class="footer-cols">
+      <div class="footer-col">
+        <span class="label">КУРСЫ</span>
+        <a href="#">ЕГЭ</a>
+        <a href="#">Все предметы</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОМПАНИЯ</span>
+        <a href="about.html">О нас</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">ПОДДЕРЖКА</span>
+        <a href="support.html">Помощь</a>
+        <a href="#">Политика</a>
+        <a href="#">Соглашение</a>
+      </div>
+      <div class="footer-col">
+        <span class="label">КОНТАКТЫ</span>
+        <span>8 800 555-34-34</span>
+        <span>hello@apex-school.ru</span>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- ============================================================================================ -->
+
+</body>
+</html>
