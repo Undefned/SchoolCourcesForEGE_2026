@@ -15,7 +15,7 @@ final class Database
         }
 
         // Используем глобальные переменные из config.php
-        global $db_host, $db_port, $db_name, $db_user, $db_pass;
+        global $db_host, $db_port, $db_name, $db_user, $db_pass, $db_schema;
 
         $dsn = sprintf(
             'pgsql:host=%s;port=%s;dbname=%s',
@@ -29,6 +29,13 @@ final class Database
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES => false,
         ]);
+
+        // Все таблицы лежат в схеме $db_schema, а не в public
+        if (!empty($db_schema)) {
+            self::$pdo->exec(
+                'SET search_path TO ' . self::quoteIdentifier($db_schema) . ', public'
+            );
+        }
 
         return self::$pdo;
     }

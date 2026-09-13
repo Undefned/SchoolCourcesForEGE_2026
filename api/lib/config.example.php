@@ -5,11 +5,12 @@ declare(strict_types=1);
 // =============================================
 // БАЗА ДАННЫХ
 // =============================================
-$db_host = getenv('PGHOST') ?: 'db';
-$db_port = getenv('PGPORT') ?: '5432';
-$db_name = getenv('PGDATABASE') ?: 'exametrika-db';
-$db_user = getenv('PGUSER') ?: 'exametrika';
-$db_pass = getenv('PGPASSWORD') ?: 'exametrika-big-pass';
+$db_host = 'localhost';
+$db_port = '5432';
+$db_name = 'studs';
+$db_user = 's******';
+$db_pass = '...';
+$db_schema = 's******';
 
 // =============================================
 // НАСТРОЙКИ СЕССИИ
