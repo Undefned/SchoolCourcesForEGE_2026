@@ -1,3 +1,4 @@
+<!-- =========================== FILE: support.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,10 +13,10 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="app-nav-links">
       <li><a href="dashboard.html">Мое обучение</a></li>
       <li><a href="schedule.html">Расписание</a></li>
@@ -45,7 +46,6 @@
 
     <div class="support-row">
 
-      <!-- DYNAMIC: live chat — messages loop over .msg, will connect to a real chat/WS backend -->
       <div class="chat-card">
         <div class="chat-header">
           <div class="avatar-wrap">
@@ -73,7 +73,6 @@
         </form>
       </div>
 
-      <!-- DYNAMIC: FAQ entries — loop over .support-faq-item -->
       <div class="faq-card">
         <h3>Частые вопросы</h3>
         <div class="sub">Ответы на самые популярные обращения</div>
@@ -101,18 +100,18 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
@@ -123,8 +122,8 @@
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
         <a href="support.html">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>
@@ -145,7 +144,6 @@
     });
   });
 
-  // Placeholder submit handler — will POST to the chat backend later.
   document.querySelector('.chat-input-row').addEventListener('submit', function(e){
     e.preventDefault();
     var input = this.querySelector('input');

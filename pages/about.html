@@ -1,3 +1,4 @@
+<!-- =========================== FILE: about.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,19 +12,19 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="nav-wrap">
   <nav class="nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="nav-links">
-      <li><a href="../pages/index.html#how">Подготовка</a></li>
-      <li><a href="../pages/teachers.html">Преподаватели</a></li>
-      <li><a href="../pages/index.html#cta">Тарифы</a></li>
-      <li><a href="../pages/about.html#testimonials">Отзывы</a></li>
-      <li><a href="../pages/index.html#faq">FAQ</a></li>
+      <li><a href="index.html#how">Подготовка</a></li>
+      <li><a href="teachers.html">Преподаватели</a></li>
+      <li><a href="index.html#cta">Тарифы</a></li>
+      <li><a href="about.html#testimonials">Отзывы</a></li>
+      <li><a href="index.html#faq">FAQ</a></li>
     </ul>
     <div class="nav-actions">
-      <button class="btn-primary btn-pill">Записаться</button>
+      <a href="index.html#cta" class="btn-primary btn-pill">Записаться</a>
     </div>
   </nav>
 </div>
@@ -40,7 +41,6 @@
 <section class="stats">
   <div class="stats-inner">
     <h2 class="section-title">Мы в цифрах</h2>
-    <!-- DYNAMIC: company stats — pull from DB / CMS, loop over stat-card -->
     <div class="stats-grid">
       <div class="stat-card">
         <span class="figure">86</span>
@@ -61,7 +61,6 @@
 <section class="testimonials" id="testimonials">
   <div class="testimonials-inner">
     <h2 class="section-title">Результаты наших учеников</h2>
-    <!-- DYNAMIC: testimonials — pull latest N reviews, loop over testimonial-card -->
     <div class="testimonial-grid">
       <div class="testimonial-card">
         <div class="name">Полина Дьячкова</div>
@@ -109,30 +108,31 @@
   </div>
 </section>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+      <div class="footer-copy">© 2026 Экзаметрика. Все права защищены.</div>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
         <a href="about.html">О нас</a>
-        <a href="#">Преподаватели</a>
-        <a href="#">Блог</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
       </div>
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
-        <a href="#">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="support.html">Помощь</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>

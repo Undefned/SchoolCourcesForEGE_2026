@@ -1,3 +1,4 @@
+<!-- =========================== FILE: blog.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,10 +12,10 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="app-nav-links">
       <li><a href="dashboard.html">Мое обучение</a></li>
       <li><a href="schedule.html">Расписание</a></li>
@@ -33,7 +34,6 @@
   <div class="blog">
     <h2>Блог</h2>
 
-    <!-- DYNAMIC: featured/latest post -->
     <a href="#" style="text-decoration:none;color:inherit;">
       <div class="featured-post">
         <img src="../assets/image.png" alt="Команда Экзаметрики">
@@ -44,7 +44,6 @@
       </div>
     </a>
 
-    <!-- DYNAMIC: recent posts, loop over .post-card -->
     <div class="post-grid">
       <a href="#" style="text-decoration:none;color:inherit;">
         <article class="post-card">
@@ -80,18 +79,18 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
@@ -102,8 +101,8 @@
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
         <a href="support.html">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>

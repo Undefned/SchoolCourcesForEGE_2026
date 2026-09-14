@@ -1,3 +1,4 @@
+<!-- =========================== FILE: index.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -15,34 +16,32 @@
 <!-- =========================== HEADER =========================== -->
 <div class="nav-wrap">
   <nav class="nav">
-    <a href="../pages/index.html"><span class="logo">Экзаметрика</span></a>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="nav-links">
-      <li><a href="#how">Подготовка</a></li>
-      <li><a href="../pages/teachers.html">Преподаватели</a></li>
-      <li><a href="#cta">Тарифы</a></li>
+      <li><a href="index.html#how">Подготовка</a></li>
+      <li><a href="teachers.html">Преподаватели</a></li>
+      <li><a href="index.html#cta">Тарифы</a></li>
       <li><a href="about.html#testimonials">Отзывы</a></li>
-      <li><a href="#faq">FAQ</a></li>
+      <li><a href="index.html#faq">FAQ</a></li>
     </ul>
     <div class="nav-actions">
-      <button class="btn-primary btn-pill">Записаться</button>
-      <!-- ===== АВАТАР ===== -->
-      <a href="../pages/dashboard.html" class="nav-avatar" id="navAvatar" title="Личный кабинет">
+      <a href="index.html#cta" class="btn-primary btn-pill">Записаться</a>
+      <a href="dashboard.html" class="nav-avatar" id="navAvatar" title="Личный кабинет">
         <img src="../../assets/Avatar.png" alt="Аватар пользователя" width="32" height="32" id="avatarImage">
       </a>
-      <!-- ================= -->
     </div>
     <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.nav-wrap').classList.toggle('menu-open')">
       <span></span><span></span><span></span>
     </button>
   </nav>
   <div class="mobile-menu">
-    <a href="#how">Подготовка</a>
-    <a href="#faq">Преподаватели</a>
-    <a href="#cta">Тарифы</a>
+    <a href="index.html#how">Подготовка</a>
+    <a href="teachers.html">Преподаватели</a>
+    <a href="index.html#cta">Тарифы</a>
     <a href="about.html#testimonials">Отзывы</a>
-    <a href="#faq">FAQ</a>
-    <button class="btn-primary">Записаться</button>
-    <a href="../pages/dashboard.html" class="mobile-avatar">Личный кабинет</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="index.html#cta" class="btn-primary">Записаться</a>
+    <a href="dashboard.html" class="mobile-avatar">Личный кабинет</a>
   </div>
 </div>
 <!-- ================================================================= -->
@@ -54,7 +53,7 @@
       <p>Онлайн-школа с харизматичными преподавателями, которые влюбляют в предмет с первого урока. ЕГЭ и ОГЭ для тех, кто хочет настоящий результат.</p>
       <div class="hero-ctas">
         <a href="#lead-card"><button class="btn-primary">Записаться бесплатно</button></a>
-        <a href="../pages/knowledge-base.html"><button class="btn-outline">Смотреть уроки</button></a>
+        <a href="knowledge-base.html"><button class="btn-outline">Смотреть уроки</button></a>
       </div>
     </div>
 
@@ -72,7 +71,7 @@
         <label class="field"><input type="tel" placeholder="+7 (999) 000-00-00"></label>
         <button type="submit" class="btn-primary">Записаться бесплатно</button>
       </form>
-      <div class="lead-note">Нажимая на кнопку «Бесплатная консультация», вы соглашаетесь с <a href="../pages/privacy.html">политикой обработки персональных данных</a></div>
+      <div class="lead-note">Нажимая на кнопку «Бесплатная консультация», вы соглашаетесь с <a href="privacy.html">политикой обработки персональных данных</a></div>
     </div>
   </div>
 </header>
@@ -205,31 +204,31 @@
   </div>
 </section>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
       <div class="footer-copy">© 2026 Экзаметрика. Все права защищены.</div>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="../pages/knowledge-base.html">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
         <a href="about.html">О нас</a>
-        <a href="../pages/teachers.html">Преподаватели</a>
-        <a href="../pages/blog.html">Блог</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
       </div>
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
-        <a href="../pages/support.html">Помощь</a>
-        <a href="../pages/privacy.html">Политика</a>
-        <a href="../pages/privacy.html">Соглашение</a>
+        <a href="support.html">Помощь</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>
@@ -250,7 +249,6 @@
     });
   });
 
-  // close mobile menu when a link inside it is clicked
   document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
     el.addEventListener('click', function(){
       document.querySelector('.nav-wrap').classList.remove('menu-open');

@@ -1,3 +1,4 @@
+<!-- =========================== FILE: register.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -67,19 +68,16 @@
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      // Скрываем старые сообщения
       errorEl.classList.remove('visible');
       successEl.classList.remove('visible');
       errorEl.textContent = '';
       successEl.textContent = '';
 
-      // Получаем данные
       const fullName = document.getElementById('registerName').value.trim();
       const email = document.getElementById('registerEmail').value.trim();
       const grade = document.getElementById('registerGrade').value;
       const password = document.getElementById('registerPassword').value.trim();
 
-      // Валидация
       if (!fullName || !email || !password || !grade) {
         errorEl.textContent = 'Пожалуйста, заполните все поля.';
         errorEl.classList.add('visible');
@@ -104,7 +102,6 @@
         return;
       }
 
-      // Отправка
       submitBtn.textContent = 'Регистрация...';
       submitBtn.disabled = true;
 
@@ -128,18 +125,15 @@
           throw new Error(data.error?.message || 'Ошибка регистрации');
         }
 
-        // Успех!
         successEl.textContent = 'Регистрация успешна! Перенаправляем на вход...';
         successEl.classList.add('visible');
 
-        // Сохраняем токен, если пришел
         if (data.data?.token) {
           document.cookie = `session_token=${data.data.token}; path=/; max-age=86400`;
         }
 
-        // Перенаправляем через 1.5 секунды
         setTimeout(() => {
-          window.location.href = '/login';
+          window.location.href = 'login.html';
         }, 1500);
 
       } catch (error) {

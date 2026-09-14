@@ -1,3 +1,4 @@
+<!-- =========================== FILE: dashboard.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -11,10 +12,10 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="app-nav-links">
       <li><a href="dashboard.html" class="active">Мое обучение</a></li>
       <li><a href="schedule.html">Расписание</a></li>
@@ -24,7 +25,6 @@
     <div class="app-nav-actions">
       <span class="score-badge" id="headerScore">—</span>
 
-      <!-- ===== АВАТАР + МЕНЮ АККАУНТА ===== -->
       <div class="nav-avatar-wrap" id="navAvatarWrap">
         <button type="button" class="nav-avatar" id="navAvatar" aria-haspopup="true" aria-expanded="false" title="Личный кабинет">
           <img src="https://placehold.co/36x36" alt="Аватар пользователя" id="headerAvatar">
@@ -34,7 +34,6 @@
           <button type="button" class="account-dropdown-logout" id="logoutBtn">Выйти из аккаунта</button>
         </div>
       </div>
-      <!-- =================================== -->
     </div>
   </nav>
 </div>
@@ -50,7 +49,6 @@
 <main class="app-container">
   <div class="dash">
 
-    <!-- ====== ПРОФИЛЬ ====== -->
     <div class="profile-row">
       <div class="card profile-card">
         <img id="profileAvatar" src="https://placehold.co/96x96" alt="Аватар">
@@ -66,7 +64,6 @@
       </div>
     </div>
 
-    <!-- ====== УСПЕВАЕМОСТЬ ====== -->
     <div class="card progress-card">
       <div class="card-head">
         <h3>Моя успеваемость</h3>
@@ -88,7 +85,6 @@
       </div>
     </div>
 
-    <!-- ====== ЗАДАНИЯ ====== -->
     <div class="card assign-card">
       <div class="card-head">
         <h3>Мои задания на этой неделе</h3>
@@ -116,18 +112,18 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
       <div class="footer-copy">© 2026 Экзаметрика. Все права защищены.</div>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
+        <a href="index.html">ЕГЭ</a>
         <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
@@ -152,7 +148,6 @@
 </footer>
 <!-- ============================================================================================ -->
 
-<!-- ===== Аватар: выпадающее меню аккаунта (логин + выход) ===== -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var wrap = document.getElementById('navAvatarWrap');
@@ -186,7 +181,6 @@
       if (e.key === 'Escape') closeDropdown();
     });
 
-    // Подставляем email авторизованного пользователя в выпадающее меню
     var token = document.cookie
       .split('; ')
       .find(function (row) { return row.startsWith('session_token='); })
@@ -215,7 +209,6 @@
       emailEl.textContent = 'Вы не авторизованы';
     }
 
-    // Выход из аккаунта
     logoutBtn.addEventListener('click', function () {
       document.cookie = 'session_token=; path=/; max-age=0';
       window.location.href = 'login.html';
@@ -223,7 +216,6 @@
   });
 </script>
 
-<!-- Подключаем основной скрипт -->
 <script src="/scripts/app.js"></script>
 </body>
 </html>

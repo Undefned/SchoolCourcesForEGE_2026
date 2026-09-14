@@ -1,3 +1,4 @@
+<!-- =========================== FILE: schedule.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,10 +13,10 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="app-nav-links">
       <li><a href="dashboard.html">Мое обучение</a></li>
       <li><a href="schedule.html" class="active">Расписание</a></li>
@@ -42,7 +43,6 @@
 <main class="app-container">
   <div class="sched">
 
-    <!-- DYNAMIC: current week's stats for the logged-in user -->
     <div class="card sched-head">
       <div>
         <h2>Расписание</h2>
@@ -55,14 +55,12 @@
       </div>
     </div>
 
-    <!-- Week navigator — will call an endpoint for the selected week's lessons later -->
     <div class="week-nav">
       <button class="nav-arrow" aria-label="Предыдущая неделя">‹</button>
       <span class="label">25 авг – 30 авг 2026</span>
       <button class="nav-arrow" aria-label="Следующая неделя">›</button>
     </div>
 
-    <!-- DYNAMIC: lessons for the selected week, loop over .event, positioned by day + hour -->
     <div class="card schedule-wrap">
       <div class="schedule-grid">
         <div class="day-head" style="grid-column:2"><div class="dow">Пн</div><div class="date">25</div></div>
@@ -72,7 +70,6 @@
         <div class="day-head" style="grid-column:6"><div class="dow">Пт</div><div class="date">29</div></div>
         <div class="day-head" style="grid-column:7"><div class="dow">Сб</div><div class="date">30</div></div>
 
-        <!-- hour grid background: 1 time label + 6 day cells per hour row -->
         <template id="hours-template">9:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00</template>
         <div class="time-cell" style="grid-row:2">9:00</div>
         <div class="day-col-bg" style="grid-row:2;grid-column:2"></div>
@@ -154,7 +151,6 @@
         <div class="day-col-bg" style="grid-row:11;grid-column:6"></div>
         <div class="day-col-bg" style="grid-row:11;grid-column:7"></div>
 
-        <!-- lesson events -->
         <div class="event" style="grid-column:2;grid-row:2 / span 2;--event-color:#8A15EA;">
           <span class="title">Математика</span>
           <span class="teacher">Иванова М. С.</span>
@@ -191,18 +187,18 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
@@ -213,8 +209,8 @@
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
         <a href="support.html">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>

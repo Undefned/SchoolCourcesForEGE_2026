@@ -1,3 +1,4 @@
+<!-- =========================== FILE: knowledge-base.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -12,15 +13,15 @@
 </head>
 <body>
 
-<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
+<!-- =========================== HEADER =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
-    <span class="logo">Экзаметрика</span>
+    <a href="index.html"><span class="logo">Экзаметрика</span></a>
     <ul class="app-nav-links">
       <li><a href="dashboard.html">Мое обучение</a></li>
-      <li><a href="#">Расписание</a></li>
+      <li><a href="schedule.html">Расписание</a></li>
       <li><a href="knowledge-base.html" class="active">База знаний</a></li>
-      <li><a href="#">Поддержка</a></li>
+      <li><a href="support.html">Поддержка</a></li>
     </ul>
     <div class="app-nav-actions">
       <span class="score-badge">85 баллов</span>
@@ -42,7 +43,6 @@
 <main class="app-container">
   <div class="kb">
 
-    <!-- DYNAMIC: library totals for the current user -->
     <div class="card kb-head">
       <div>
         <h2>База знаний</h2>
@@ -55,7 +55,6 @@
       </div>
     </div>
 
-    <!-- Search + filters — client-side today, will hit a search endpoint later -->
     <div class="card search-card">
       <div class="search-row">
         <label class="search-input">
@@ -74,8 +73,6 @@
         <button class="pill-filter" data-subject="biology">Биология</button>
       </div>
     </div>
-
-    <!-- DYNAMIC: one subject-section per subject, each looping its material-card list -->
 
     <div class="subject-section" data-subject="math">
       <div class="subject-header">
@@ -284,30 +281,30 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
+<!-- =========================== FOOTER =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
-      <span class="logo">Экзаметрика</span>
+      <a href="index.html"><span class="logo">Экзаметрика</span></a>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
-        <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="index.html">ЕГЭ</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
         <a href="about.html">О нас</a>
-        <a href="#">Преподаватели</a>
-        <a href="#">Блог</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
       </div>
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
-        <a href="#">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="support.html">Помощь</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>

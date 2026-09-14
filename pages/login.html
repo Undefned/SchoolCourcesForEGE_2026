@@ -1,3 +1,4 @@
+<!-- =========================== FILE: login.html =========================== -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -46,14 +47,12 @@
     const errorEl = document.getElementById('loginError');
     const submitBtn = document.getElementById('loginSubmit');
 
-    // Если уже авторизован — редирект на дашборд
     const token = document.cookie
       .split('; ')
       .find(row => row.startsWith('session_token='))
       ?.split('=')[1];
 
     if (token) {
-      // Проверяем, валидный ли токен
       fetch('/api/auth/me', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -62,7 +61,7 @@
       .then(res => res.json())
       .then(data => {
         if (data.ok) {
-          window.location.href = '/dashboard';
+          window.location.href = 'dashboard.html';
         }
       })
       .catch(() => {});
@@ -71,15 +70,12 @@
     form.addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      // Скрываем старые ошибки
       errorEl.classList.remove('visible');
       errorEl.textContent = '';
 
-      // Получаем данные
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
 
-      // Валидация
       if (!email || !password) {
         errorEl.textContent = 'Пожалуйста, заполните все поля.';
         errorEl.classList.add('visible');
@@ -92,7 +88,6 @@
         return;
       }
 
-      // Отправка
       submitBtn.textContent = 'Вход...';
       submitBtn.disabled = true;
 
@@ -114,13 +109,11 @@
           throw new Error(data.error?.message || 'Ошибка входа');
         }
 
-        // Сохраняем токен
         if (data.data?.token) {
           document.cookie = `session_token=${data.data.token}; path=/; max-age=86400`;
         }
 
-        // Перенаправляем на дашборд
-        window.location.href = '/dashboard';
+        window.location.href = 'dashboard.html';
 
       } catch (error) {
         errorEl.textContent = error.message || 'Ошибка при входе. Проверьте email и пароль.';
