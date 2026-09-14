@@ -7,63 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles/style.css">
-<style>
-  /* ---- page-specific: Knowledge base ---- */
-  .kb{display:flex;flex-direction:column;gap:32px;padding-top:48px;}
+<link rel="stylesheet" href="styles/style.css">
 
-  .kb-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
-  .kb-head h2{font-size:32px;font-weight:600;}
-  .kb-head .sub{color:var(--main-text);font-size:14px;margin-top:8px;}
-  .kb-head-stats{display:flex;gap:12px;flex-wrap:wrap;}
-
-  .search-card{display:flex;flex-direction:column;gap:16px;padding:24px;}
-  .search-row{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;}
-  .search-input{
-    flex:1 1 300px;
-    display:flex;align-items:center;gap:10px;
-    padding:16px;border-radius:14px;
-    outline:1px solid var(--stroke);outline-offset:-1px;
-  }
-  .search-input input{border:none;outline:none;background:transparent;flex:1;font-family:'Inter',sans-serif;font-size:14px;color:var(--header);}
-  .search-input input::placeholder{color:var(--main-text);}
-  .filter-btn,.sort-chip{
-    padding:14px 20px;background:var(--back);border-radius:14px;
-    display:flex;align-items:center;gap:8px;color:var(--main-text);font-size:14px;font-weight:500;white-space:nowrap;
-  }
-  .subject-pills{display:flex;gap:8px;flex-wrap:wrap;}
-  .pill-filter{padding:8px 16px;border-radius:100px;font-size:14px;font-weight:500;background:var(--white);color:var(--main-text);border:none;cursor:pointer;}
-  .pill-filter.active{background:var(--black);color:var(--white);}
-
-  .subject-section{display:flex;flex-direction:column;gap:24px;}
-  .subject-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
-  .subject-header .left{display:flex;align-items:center;gap:12px;}
-  .subject-dot{width:12px;height:12px;border-radius:50%;flex:none;}
-  .subject-header h3{font-size:20px;font-weight:700;font-family:'Inter',sans-serif;}
-  .count-pill{padding:4px 10px;background:var(--back);border-radius:100px;font-size:13px;font-weight:500;color:var(--main-text);}
-  .see-all{color:var(--blue);font-size:14px;font-weight:700;}
-
-  .material-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  .material-card{background:var(--white);border:1px solid var(--stroke);border-radius:20px;padding:24px 26px 24px 24px;display:flex;flex-direction:column;gap:20px;}
-  .type-badge{align-self:flex-start;display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;}
-  .type-badge .icon{font-size:13px;}
-  .type-default{background:var(--back);color:#4E4E5E;}
-  .type-test{background:var(--status-done-bg);color:#4E4E5E;}
-  .type-task{background:var(--back);color:#4E4E5E;}
-  .type-video{background:var(--video-bg);color:var(--blue);}
-  .material-title{font-size:14px;font-weight:700;line-height:1.7;color:#101828;min-height:48px;}
-  .material-tag{display:flex;align-items:center;gap:6px;}
-  .material-tag .dot{width:8px;height:8px;border-radius:50%;flex:none;}
-  .material-tag span{font-size:13px;color:var(--main-text);}
-  .material-meta{display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid var(--back);font-size:12px;font-weight:500;color:var(--main-text);}
-
-  @media (max-width:960px){.material-grid{grid-template-columns:repeat(2,1fr);}}
-  @media (max-width:640px){
-    .material-grid{grid-template-columns:1fr;}
-    .kb-head-stats{width:100%;}
-    .mini-stat{min-width:0;}
-  }
-</style>
 </head>
 <body>
 

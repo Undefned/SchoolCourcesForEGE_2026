@@ -7,52 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles/style.css">
-<style>
-  /* ---- page-specific: Schedule ---- */
-  .sched{display:flex;flex-direction:column;gap:24px;padding-top:48px;}
+<link rel="stylesheet" href="styles/style.css">
 
-  .sched-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px;}
-  .sched-head h2{font-size:32px;font-weight:600;}
-  .sched-head .sub{color:var(--main-text);font-size:14px;margin-top:8px;}
-  .sched-head-stats{display:flex;gap:12px;flex-wrap:wrap;}
-
-  .week-nav{display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--white);border:0.67px solid var(--stroke);border-radius:20px;}
-  .week-nav .label{font-family:'Unbounded',sans-serif;font-weight:700;font-size:14px;}
-  .nav-arrow{width:36px;height:36px;background:var(--back);border-radius:10px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;color:var(--main-text);}
-  .nav-arrow:hover{background:#e9eaec;}
-
-  .schedule-wrap{overflow-x:auto;}
-  .schedule-grid{
-    display:grid;
-    grid-template-columns:56px repeat(6, minmax(120px,1fr));
-    min-width:920px;
-  }
-  .day-head{grid-row:1;text-align:center;padding:12px 4px;border-bottom:1px solid var(--stroke);}
-  .day-head.today{background:var(--back);border-radius:10px 10px 0 0;}
-  .day-head .dow{font-size:12px;color:var(--main-text);font-weight:500;}
-  .day-head .date{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;margin-top:2px;}
-  .time-cell{grid-column:1;display:flex;align-items:flex-start;justify-content:flex-end;padding:8px 8px 0 0;font-size:12px;color:#AAAAAA;border-top:1px solid var(--stroke);height:64px;}
-  .day-col-bg{border-top:1px solid var(--stroke);border-left:1px solid var(--stroke);height:64px;}
-
-  .event{
-    margin:2px 4px;
-    padding:8px;
-    background:var(--white);
-    border-radius:10px;
-    border:1px solid var(--event-color, var(--purple));
-    display:flex;flex-direction:column;gap:4px;
-    font-size:12px;
-    overflow:hidden;
-  }
-  .event .title{font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:var(--black);}
-  .event .teacher{color:var(--main-text);font-size:12px;}
-  .event .badge{align-self:flex-start;padding:3px 10px;background:var(--video-bg);color:var(--blue);border-radius:100px;font-size:10px;font-weight:700;}
-
-  @media (max-width:640px){
-    .sched-head-stats{width:100%;}
-  }
-</style>
 </head>
 <body>
 

@@ -7,100 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../styles/style.css">
-<style>
-  /* ---- page-specific: Dashboard ---- */
-  .dash{display:flex;flex-direction:column;gap:48px;padding-top:48px;}
-
-  /* profile row */
-  .profile-row{display:flex;gap:24px;flex-wrap:wrap;}
-  .profile-card{flex:2 1 420px;display:flex;align-items:center;gap:24px;}
-  .profile-card img{width:96px;height:96px;border-radius:50%;border:3px solid var(--purple);object-fit:cover;}
-  .profile-card h2{font-size:20px;font-weight:700;margin:0;}
-  .profile-card .email{color:var(--main-text);font-size:14px;margin-top:8px;}
-  .profile-stats{flex:1 1 340px;display:flex;gap:12px;flex-wrap:wrap;}
-  .profile-stats .mini-stat{border-radius:24px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;gap:16px;min-height:160px;background:var(--white);flex:1;}
-  .profile-stats .mini-stat .num{font-size:32px;color:var(--purple);font-family:'Unbounded',sans-serif;font-weight:900;}
-  .profile-stats .mini-stat:nth-child(2) .num{color:var(--black);}
-  .profile-stats .mini-stat .label{font-size:13px;font-weight:500;color:var(--main-text);}
-
-  /* progress section */
-  .progress-card .card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:24px;}
-  .progress-card .card-head h3{font-size:20px;font-weight:700;}
-  .progress-card .card-head .see-more{color:var(--blue);font-size:14px;font-weight:700;text-decoration:none;}
-  .progress-layout{display:flex;gap:24px;flex-wrap:wrap;align-items:stretch;}
-  .subject-list{flex:1 1 480px;display:flex;flex-direction:column;gap:12px;}
-  .subject-row{background:var(--back);border-radius:16px;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
-  .subject-row .left{display:flex;align-items:center;gap:16px;}
-  .ring{
-    width:64px;height:64px;border-radius:50%;position:relative;
-    background:conic-gradient(var(--ring-color,#8A15EA) calc(var(--pct,0)*1%), #E5E7EB 0);
-    flex-shrink:0;
-  }
-  .ring::after{
-    content:attr(data-pct)"%";
-    position:absolute;inset:6px;background:var(--back);border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:var(--black);
-  }
-  .subject-row .name{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;color:#101828;}
-  .subject-row .activity{color:var(--main-text);font-size:14px;margin-top:4px;}
-  .btn-continue{padding:8px 25px;border-radius:100px;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-weight:700;font-size:14px;}
-
-  .week-card{
-    flex:1 1 340px;
-    max-width:400px;
-    background:#0C111B;
-    border-radius:20px;
-    padding:24px;
-    display:flex;flex-direction:column;gap:20px;
-    color:white;
-    min-height:320px;
-  }
-  .week-card h4{font-family:'Unbounded',sans-serif;font-weight:700;font-size:16px;margin:0;}
-  .week-card .sub{color:var(--main-text);font-size:14px;margin-top:4px;}
-  .bars{flex:1;display:flex;justify-content:space-between;align-items:flex-end;gap:8px;padding-top:16px;}
-  .bar-col{display:flex;flex-direction:column;align-items:center;gap:8px;}
-  .bar{width:24px;border-top-left-radius:6px;border-top-right-radius:6px;min-height:4px;}
-  .bar-col .day{font-size:11px;font-weight:700;color:var(--main-text);}
-
-  /* assignments table */
-  .assign-card .card-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px;}
-  .assign-card .card-head h3{font-size:20px;font-weight:700;}
-  .filters{display:flex;gap:12px;flex-wrap:wrap;}
-  .select-chip{padding:14px;background:var(--back);border-radius:14px;display:flex;align-items:center;gap:8px;color:var(--main-text);font-size:14px;min-width:150px;justify-content:space-between;cursor:pointer;}
-  .assign-table{width:100%;border-collapse:collapse;}
-  .assign-table thead th{
-    text-align:left;background:var(--back);color:var(--main-text);font-size:13px;font-weight:700;
-    padding:12px 16px;
-  }
-  .assign-table thead th:last-child{text-align:right;}
-  .assign-table tbody td{padding:16px;border-bottom:1px solid var(--stroke);font-size:14px;vertical-align:middle;}
-  .assign-table tbody td:last-child{text-align:right;font-weight:700;color:var(--black);}
-  .assign-name{color:#101828;font-weight:600;}
-  .assign-subject{color:var(--main-text);font-weight:500;}
-  .status-pill{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;}
-  .status-done{background:#D1FAE5;color:#065F46;}
-  .status-progress{background:#FEF3C7;color:#92400E;}
-  .status-none{background:#F3F4F6;color:#6B7280;}
-  .deadline-urgent{color:#EF4444;}
-  .deadline-normal{color:var(--main-text);}
-
-  /* empty states */
-  .empty-state{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--main-text);font-size:16px;}
-  .empty-state .icon{font-size:48px;display:block;margin-bottom:16px;}
-
-  @media (max-width:700px){
-    .assign-table{display:block;overflow-x:auto;white-space:nowrap;}
-    .profile-row{flex-direction:column;}
-    .profile-card{flex-direction:column;text-align:center;}
-    .profile-stats{flex-direction:column;}
-  }
-</style>
+<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 
-<!-- =========================== HEADER =========================== -->
+<!-- =========================== HEADER (future: includes/app-header.php) =========================== -->
 <div class="app-nav-wrap">
   <nav class="app-nav">
     <span class="logo">Экзаметрика</span>
@@ -112,7 +23,18 @@
     </ul>
     <div class="app-nav-actions">
       <span class="score-badge" id="headerScore">—</span>
-      <img class="avatar" id="headerAvatar" src="https://placehold.co/36x36" alt="Аватар пользователя">
+
+      <!-- ===== АВАТАР + МЕНЮ АККАУНТА ===== -->
+      <div class="nav-avatar-wrap" id="navAvatarWrap">
+        <button type="button" class="nav-avatar" id="navAvatar" aria-haspopup="true" aria-expanded="false" title="Личный кабинет">
+          <img src="https://placehold.co/36x36" alt="Аватар пользователя" id="headerAvatar">
+        </button>
+        <div class="account-dropdown" id="accountDropdown">
+          <div class="account-dropdown-email" id="accountEmail">Загрузка...</div>
+          <button type="button" class="account-dropdown-logout" id="logoutBtn">Выйти из аккаунта</button>
+        </div>
+      </div>
+      <!-- =================================== -->
     </div>
   </nav>
 </div>
@@ -194,30 +116,31 @@
   </div>
 </main>
 
-<!-- =========================== FOOTER =========================== -->
+<!-- =========================== FOOTER (future: includes/footer.php) =========================== -->
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-brand">
       <span class="logo">Экзаметрика</span>
       <p>Онлайн-школа подготовки к ЕГЭ. 9 лет опыта. 220к+ учеников</p>
+      <div class="footer-copy">© 2026 Экзаметрика. Все права защищены.</div>
     </div>
     <div class="footer-cols">
       <div class="footer-col">
         <span class="label">КУРСЫ</span>
         <a href="#">ЕГЭ</a>
-        <a href="#">Все предметы</a>
+        <a href="knowledge-base.html">Все предметы</a>
       </div>
       <div class="footer-col">
         <span class="label">КОМПАНИЯ</span>
         <a href="about.html">О нас</a>
-        <a href="#">Преподаватели</a>
-        <a href="#">Блог</a>
+        <a href="teachers.html">Преподаватели</a>
+        <a href="blog.html">Блог</a>
       </div>
       <div class="footer-col">
         <span class="label">ПОДДЕРЖКА</span>
-        <a href="#">Помощь</a>
-        <a href="#">Политика</a>
-        <a href="#">Соглашение</a>
+        <a href="support.html">Помощь</a>
+        <a href="privacy.html">Политика</a>
+        <a href="privacy.html">Соглашение</a>
       </div>
       <div class="footer-col">
         <span class="label">КОНТАКТЫ</span>
@@ -228,6 +151,77 @@
   </div>
 </footer>
 <!-- ============================================================================================ -->
+
+<!-- ===== Аватар: выпадающее меню аккаунта (логин + выход) ===== -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var wrap = document.getElementById('navAvatarWrap');
+    var toggleBtn = document.getElementById('navAvatar');
+    var dropdown = document.getElementById('accountDropdown');
+    var emailEl = document.getElementById('accountEmail');
+    var logoutBtn = document.getElementById('logoutBtn');
+
+    function closeDropdown() {
+      dropdown.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+    function openDropdown() {
+      dropdown.classList.add('open');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+    }
+
+    toggleBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (dropdown.classList.contains('open')) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!wrap.contains(e.target)) closeDropdown();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeDropdown();
+    });
+
+    // Подставляем email авторизованного пользователя в выпадающее меню
+    var token = document.cookie
+      .split('; ')
+      .find(function (row) { return row.startsWith('session_token='); })
+      ?.split('=')[1];
+
+    if (token) {
+      fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.ok && data.data) {
+            emailEl.textContent = data.data.email || 'Аккаунт';
+            if (data.data.fullName) {
+              document.getElementById('profileName').textContent = data.data.fullName;
+            }
+            if (data.data.email) {
+              document.getElementById('profileEmail').textContent = data.data.email;
+            }
+          } else {
+            emailEl.textContent = 'Не удалось загрузить аккаунт';
+          }
+        })
+        .catch(function () {
+          emailEl.textContent = 'Не удалось загрузить аккаунт';
+        });
+    } else {
+      emailEl.textContent = 'Вы не авторизованы';
+    }
+
+    // Выход из аккаунта
+    logoutBtn.addEventListener('click', function () {
+      document.cookie = 'session_token=; path=/; max-age=0';
+      window.location.href = 'login.html';
+    });
+  });
+</script>
 
 <!-- Подключаем основной скрипт -->
 <script src="/scripts/app.js"></script>
