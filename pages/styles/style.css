@@ -53,9 +53,6 @@ button{ cursor:pointer; }
   color:var(--header);
 }
 
-/* ---------------------------------------------------------------------
-   2. ОБЩИЕ КОМПОНЕНТЫ
---------------------------------------------------------------------- */
 button,.btn{
   font-family:'Inter',sans-serif;
   font-weight:700;
@@ -69,7 +66,16 @@ button,.btn{
 }
 .btn-primary{ background:var(--green); color:var(--black); }
 .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 6px 16px rgba(117,234,21,0.35); }
-.btn-outline{ background:transparent; color:var(--black); outline:1px solid var(--stroke); outline-offset:-1px; }
+.btn-outline{
+  background:transparent;
+  color:var(--black);
+  outline:1px solid var(--stroke);
+  outline-offset:-1px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+}
 .btn-outline:hover{ background:rgba(0,0,0,0.03); }
 .btn-soft{
   background:var(--back);
@@ -97,8 +103,6 @@ button,.btn{
   color:var(--white);
   background:var(--black);
 }
-
-/* зелёная pill-кнопка форм авторизации */
 .btn-auth{
   width:100%;
   padding:12px 25px;
@@ -135,9 +139,6 @@ button,.btn{
 .mini-stat .num{ font-family:'Inter',sans-serif; font-weight:600; font-size:24px; }
 .mini-stat .label{ color:var(--main-text); font-size:14px; }
 
-/* =====================================================================
-   3. МАРКЕТИНГОВЫЙ НАВБАР (index / about / privacy) + мобильное меню
-===================================================================== */
 .nav-wrap{
   position:sticky;
   top:16px;
@@ -165,7 +166,6 @@ button,.btn{
 .nav-links a:hover,.nav-links a.active{ color:var(--white); }
 .nav-actions{ display:flex; align-items:center; gap:12px; }
 
-/* мобильный гамбургер, показывается вместе со скрытием .nav-links */
 .nav-toggle{
   display:none;
   flex-direction:column;
@@ -208,9 +208,6 @@ button,.btn{
 .nav-wrap.menu-open .mobile-menu{ display:flex; }
 .nav-wrap.menu-open .nav{ border-radius:24px 24px 0 0; }
 
-/* =====================================================================
-   4. APP-НАВБАР (dashboard / schedule / kb / blog / support / teachers)
-===================================================================== */
 .app-nav-wrap{ padding:24px 60px 0; }
 .app-nav{
   height:64px;
@@ -228,7 +225,7 @@ button,.btn{
 .app-nav-links a{ color:#8B8B8B; font-size:14px; font-weight:500; }
 .app-nav-links a:hover{ color:#cfcfcf; }
 .app-nav-links a.active{ color:var(--white); }
-.app-nav-actions{ display:flex; align-items:center; gap:16px; }
+.app-nav-actions{ display:flex; align-items:center; gap:12px; margin-left:auto; }
 .score-badge{
   padding:6px 12px;
   background:var(--dark-blue);
@@ -238,9 +235,16 @@ button,.btn{
   font-weight:700;
   white-space:nowrap;
 }
+.score-badge:empty{
+  display:none;
+}
 .avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; }
 
-/* ---- Аватар с выпадающим меню аккаунта (используется на dashboard.html) ---- */
+.header-join-btn{
+  text-decoration:none;
+  white-space:nowrap;
+}
+
 .nav-avatar-wrap{ position:relative; display:flex; align-items:center; }
 .nav-avatar{
   width:36px;
@@ -256,6 +260,8 @@ button,.btn{
 }
 .nav-avatar img{ width:100%; height:100%; object-fit:cover; }
 .nav-avatar:hover{ box-shadow:0 0 0 3px rgba(255,255,255,0.25); }
+
+.app-nav .nav-toggle{ margin-left:8px; }
 
 .account-dropdown{
   position:absolute;
@@ -294,9 +300,6 @@ button,.btn{
 }
 .account-dropdown-logout:hover{ background:#FEF2F2; }
 
-/* ---------------------------------------------------------------------
-   5. ХЛЕБНЫЕ КРОШКИ
---------------------------------------------------------------------- */
 .breadcrumb-wrap{ padding:16px 60px; }
 .breadcrumb{ display:flex; flex-wrap:wrap; align-items:center; gap:8px; font-size:14px; color:#737373; }
 .breadcrumb a{ color:#737373; }
@@ -304,14 +307,8 @@ button,.btn{
 .breadcrumb .sep{ font-size:12px; color:#737373; }
 .breadcrumb .current{ color:#1A1A1A; font-weight:600; }
 
-/* ---------------------------------------------------------------------
-   6. КОНТЕЙНЕР ПРИЛОЖЕНИЯ
---------------------------------------------------------------------- */
 .app-container{ max-width:1096px; margin:0 auto; padding:0 24px 96px; }
 
-/* ---------------------------------------------------------------------
-   7. ФУТЕР — одинаковый на всех страницах, кроме login / register
---------------------------------------------------------------------- */
 .site-footer{ background:var(--black); padding:64px 24px; }
 .footer-inner{
   max-width:1094px;
@@ -331,19 +328,12 @@ button,.btn{
 .footer-col a,.footer-col span{ color:var(--main-text); font-size:14px; line-height:24px; padding:5px 0; }
 .footer-col a:hover{ color:var(--white); }
 
-/* ---------------------------------------------------------------------
-   Адаптив — общие элементы шапки/футера (960px)
---------------------------------------------------------------------- */
 @media (max-width:960px){
   .nav-links{ display:none; }
   .app-nav-links{ display:none; }
   .section-title{ font-size:32px; }
 }
 
-/* =====================================================================
-   8. СТРАНИЦЫ АВТОРИЗАЦИИ — login.html / register.html
-   (единственные страницы без общего хедера/футера)
-===================================================================== */
 .auth-page{
   min-height:100vh;
   background:linear-gradient(160deg, var(--header) 32%, var(--dark-blue) 81%);
@@ -433,11 +423,6 @@ button,.btn{
   .form-group select{ height:46px; font-size:13px; }
 }
 
-/* =====================================================================
-   9. СТРАНИЦЫ — каждая в своём корневом классе, изолированно
-===================================================================== */
-
-/* ---------- 9.1 Landing (index.html) ---------- */
 .hero{ padding:150px 24px 96px; }
 .hero-inner{ max-width:1094px; margin:0 auto; display:flex; flex-direction:column; gap:64px; }
 .hero-copy{ display:flex; flex-direction:column; gap:32px; }
@@ -553,7 +538,6 @@ button,.btn{
   .cta-fine{ font-size:12px; }
 }
 
-/* ---------- 9.2 About (about.html) ---------- */
 .about-hero{ padding:150px 24px 0; }
 .about-hero-inner{ max-width:1094px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:24px; text-align:center; }
 .about-hero h1{ font-size:48px; font-weight:900; }
@@ -582,7 +566,6 @@ button,.btn{
   .stat-card .figure{ font-size:28px; }
 }
 
-/* ---------- 9.3 Privacy (privacy.html) ---------- */
 .privacy-hero{ padding:120px 24px 48px; background:var(--back); }
 .privacy-hero-inner{ max-width:1094px; margin:0 auto; display:flex; flex-direction:column; gap:16px; }
 .privacy-hero h1{ font-size:48px; font-weight:900; line-height:1.15; color:var(--header); margin-bottom:8px; }
@@ -611,7 +594,6 @@ button,.btn{
   .privacy-hero h1{ font-size:26px; }
 }
 
-/* ---------- 9.4 Dashboard (dashboard.html) ---------- */
 .dash{ display:flex; flex-direction:column; gap:48px; padding-top:48px; }
 
 .profile-row{ display:flex; gap:24px; flex-wrap:wrap; }
@@ -694,7 +676,6 @@ button,.btn{
 
   .subject-row .btn-continue{ width:100%; order:3; }
 
-  /* Заявки: таблица -> карточки */
   .assign-table thead{ display:none; }
   .assign-table,
   .assign-table tbody,
@@ -731,7 +712,6 @@ button,.btn{
   .assign-table td:nth-child(5)::before{ content:"Баллы"; }
 }
 
-/* ---------- 9.5 Schedule (schedule.html) ---------- */
 .sched{ display:flex; flex-direction:column; gap:24px; padding-top:48px; }
 .sched-head{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
 .sched-head h2{ font-size:32px; font-weight:600; }
@@ -761,7 +741,6 @@ button,.btn{
 .event .teacher{ color:var(--main-text); font-size:12px; }
 .event .badge{ align-self:flex-start; padding:3px 10px; background:var(--video-bg); color:var(--blue); border-radius:100px; font-size:10px; font-weight:700; }
 
-/* мобильный день-пикер + повестка дня — скрыты на десктопе */
 .day-picker{ display:none; }
 .day-agenda{ display:none; }
 
@@ -769,7 +748,6 @@ button,.btn{
   .sched-head-stats{ width:100%; }
   .sched-head-stats .mini-stat{ background:var(--back); border:none; border-radius:12px; padding:12px; min-width:0; }
 
-  /* прячем недельную сетку, показываем один день */
   .schedule-wrap{ display:none; }
 
   .day-picker{
@@ -818,7 +796,6 @@ button,.btn{
   .day-agenda-empty{ text-align:center; padding:40px 20px; color:var(--main-text); font-size:14px; }
 }
 
-/* ---------- 9.6 Knowledge base (knowledge-base.html) ---------- */
 .kb{ display:flex; flex-direction:column; gap:32px; padding-top:48px; }
 .kb-head{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px; }
 .kb-head h2{ font-size:32px; font-weight:600; }
@@ -831,6 +808,18 @@ button,.btn{
 .search-input input{ border:none; outline:none; background:transparent; flex:1; font-size:14px; color:var(--header); }
 .search-input input::placeholder{ color:var(--main-text); }
 .filter-btn,.sort-chip{ padding:14px 20px; background:var(--back); border-radius:14px; display:flex; align-items:center; gap:8px; color:var(--main-text); font-size:14px; font-weight:500; white-space:nowrap; }
+select.sort-chip{
+  appearance:none;
+  -webkit-appearance:none;
+  border:none;
+  cursor:pointer;
+  font-family:inherit;
+  padding-right:32px;
+  background-image:url('../../assets/open.svg');
+  background-repeat:no-repeat;
+  background-position:right 12px center;
+  background-size:10px;
+}
 .subject-pills{ display:flex; gap:8px; flex-wrap:wrap; }
 .pill-filter{ padding:8px 16px; border-radius:100px; font-size:14px; font-weight:500; background:var(--white); color:var(--main-text); border:none; }
 .pill-filter.active{ background:var(--black); color:var(--white); }
@@ -864,7 +853,6 @@ button,.btn{
   .kb .mini-stat{ min-width:0; }
 }
 
-/* ---------- 9.7 Blog (blog.html) ---------- */
 .blog{ display:flex; flex-direction:column; gap:32px; padding-top:48px; }
 .blog h2{ font-size:48px; font-weight:900; }
 
@@ -896,7 +884,6 @@ button,.btn{
   .post-grid{ grid-template-columns:1fr; }
 }
 
-/* ---------- 9.8 Support (support.html) ---------- */
 .support{ display:flex; flex-direction:column; gap:24px; padding-top:48px; }
 .support h2{ font-size:48px; font-weight:900; }
 .support-row{ display:flex; gap:32px; flex-wrap:wrap; align-items:flex-start; }
@@ -934,7 +921,6 @@ button,.btn{
 .support-faq-item.open .support-faq-a{ max-height:800px; }
 .support-faq-a p{ padding:0 0 20px; color:var(--main-text); font-size:14px; line-height:1.7; }
 
-/* переключатель «Чат с куратором / Частые вопросы» — виден только на мобиле */
 .support-tabs{ display:none; }
 
 @media (max-width:640px){
@@ -971,7 +957,6 @@ button,.btn{
   .support-faq-a p{ padding-bottom:16px; font-size:13px; line-height:1.6; }
 }
 
-/* ---------- 9.9 Teachers (teachers.html) ---------- */
 .teachers{ display:flex; flex-direction:column; gap:32px; padding-top:48px; }
 .teachers h2{ font-size:48px; font-weight:900; }
 
@@ -999,7 +984,6 @@ button,.btn{
 }
 
 @media (max-width:640px){
-  /* --- маркетинговый хедер --- */
   .nav-wrap{
     flex-direction:column;
     position:sticky;
@@ -1021,22 +1005,24 @@ button,.btn{
 
   .mobile-menu{ border-radius:0; }
 
-  /* --- app-хедер (dashboard/schedule/kb/blog/support/teachers) --- */
   .app-nav-wrap{ padding:0; position:sticky; top:0; z-index:50; }
   .app-nav{
     border-radius:0;
     box-shadow:none;
     padding:12px 16px;
     height:60px;
+    gap:8px;
   }
   .app-nav-links{ display:none; }
-  .app-nav-actions .score-badge{ display:none; }
-  .app-nav-actions{ display:flex; align-items:center; }
 
-  .app-nav .nav-toggle{ display:flex; }
+  .app-nav-actions .score-badge,
+  .app-nav-actions .header-join-btn{ display:none !important; }
+
+  .app-nav-actions{ display:flex; align-items:center; margin-left:auto; }
+
+  .app-nav .nav-toggle{ display:flex; margin-left:8px; }
   .app-nav-wrap .mobile-menu{ border-radius:0; }
 
-  /* аватар — общий для обоих хедеров, всегда виден, чуть левее бургера */
   .nav-avatar,.nav-avatar-wrap{ display:flex; }
   .nav-avatar img,.nav-avatar .avatar,.app-nav .avatar{ width:32px; height:32px; }
   .account-dropdown{ right:-8px; }
@@ -1050,10 +1036,6 @@ button,.btn{
   .footer-copy{ display:block; }
 }
 
-
-/* =====================================================================
-   МОДАЛКА МАТЕРИАЛА / ЗАДАНИЯ
-   ===================================================================== */
 .material-modal {
     border: none;
     border-radius: 20px;
@@ -1067,8 +1049,6 @@ button,.btn{
     display: flex;
     flex-direction: column;
 }
-/* Пока <dialog> закрыт — его вообще нет в потоке. Без этого на мобилке
-   под футером остаётся «призрак» модалки. */
 .material-modal:not([open]) {
     display: none !important;
 }
@@ -1197,7 +1177,6 @@ button,.btn{
     box-sizing: border-box;
 }
 
-/* Карточка материала — выполнено */
 .material-card--done {
     border-color: #6EE7B7;
     background: linear-gradient(180deg, #FFFFFF 0%, #F4FFF9 100%);
@@ -1216,27 +1195,14 @@ button,.btn{
     font-weight: 700;
 }
 
-/* Строка таблицы заданий — курсор */
 .assign-table tbody tr[data-assignment-id]:hover {
     background: #f9fafb;
 }
 
-/* Мобильная адаптация модалки */
 @media (max-width: 640px) {
     .material-modal { width: calc(100% - 16px); max-height: 92vh; }
     .material-modal__header { padding: 16px; }
     .material-modal__body { padding: 16px; font-size: 14px; }
     .material-modal__footer { padding: 12px 16px 16px; }
     .material-modal__title { font-size: 16px; }
-}
-
-.btn-outline.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:16px 25px;
-  font-weight:700;
-  font-size:16px;
-  text-decoration:none;
-  border-radius:14px;
 }

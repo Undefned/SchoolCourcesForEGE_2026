@@ -1,6 +1,3 @@
-// =============================================
-// API_BASE
-// =============================================
 const API_BASE = (() => {
   const path = window.location.pathname;
   const dir = path.replace(/\/[^\/]*$/, '/');
@@ -8,11 +5,6 @@ const API_BASE = (() => {
   return root + 'api';
 })();
 
-console.log('API_BASE =', API_BASE);
-
-// =============================================
-// БАЗОВЫЙ ФЕТЧ
-// =============================================
 async function fetchApi(endpoint, options = {}) {
   let path  = endpoint;
   let query = '';
@@ -80,9 +72,6 @@ async function fetchApi(endpoint, options = {}) {
   return data.data;
 }
 
-// =============================================
-// АВТОРИЗАЦИЯ
-// =============================================
 async function login(email, password) {
     return fetchApi('/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
 }
@@ -96,9 +85,6 @@ async function getCurrentUser() {
     return fetchApi('/auth/me');
 }
 
-// =============================================
-// МАТЕРИАЛЫ
-// =============================================
 async function getMaterials(filters = {}) {
     const params = new URLSearchParams();
     if (filters.subject) params.append('subject', filters.subject);
@@ -112,9 +98,6 @@ async function viewMaterial(materialId) {
     return fetchApi('/materials/view', { method: 'POST', body: JSON.stringify({ materialId }) });
 }
 
-// =============================================
-// ЗАДАНИЯ
-// =============================================
 async function getAssignments(filters = {}) {
     const params = new URLSearchParams();
     if (filters.subject) params.append('subject', filters.subject);
@@ -138,9 +121,6 @@ async function completeAssignment({ assignmentId = null, materialId = null }) {
     });
 }
 
-// =============================================
-// ПОДДЕРЖКА
-// =============================================
 async function getSupportMessages() {
     return fetchApi('/support');
 }
@@ -148,9 +128,6 @@ async function sendSupportMessage(message) {
     return fetchApi('/support', { method: 'POST', body: JSON.stringify({ message }) });
 }
 
-// =============================================
-// ЗАЯВКИ
-// =============================================
 async function sendApplication(data) {
     const payload = {
         email:    data.email    || null,
@@ -164,9 +141,6 @@ async function sendApplication(data) {
     return fetchApi('/applications', { method: 'POST', body: JSON.stringify(payload) });
 }
 
-// =============================================
-// ПОЛЬЗОВАТЕЛЬ
-// =============================================
 async function getUserProfile() {
     return fetchApi('/user');
 }
@@ -174,9 +148,6 @@ async function updateUserProfile(data) {
     return fetchApi('/user', { method: 'PUT', body: JSON.stringify(data) });
 }
 
-// =============================================
-// ХЕЛПЕРЫ
-// =============================================
 function formatDate(dateStr) {
     if (!dateStr) return '—';
     const d = new Date(dateStr);
@@ -223,9 +194,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// =============================================
-// ЭКСПОРТ В WINDOW
-// =============================================
 Object.assign(window, {
     fetchApi, login, register, logout, getCurrentUser,
     getMaterials, viewMaterial,
@@ -239,11 +207,7 @@ Object.assign(window, {
     escapeHtml,
 });
 
-// =============================================
-// HEADER: аватар + баллы или кнопка «Записаться»
-// =============================================
 const GUEST_AVATAR = (() => {
-    // путь к profile.svg относительно текущей страницы
     const inPages = window.location.pathname.includes('/pages/');
     return inPages ? '../assets/profile.svg' : 'assets/profile.svg';
 })();
@@ -259,25 +223,21 @@ async function initHeader() {
         .find(row => row.startsWith('session_token='));
     const isAuth = !!token;
 
-    // ---- Аватарки во всех местах ----
     const avatars = document.querySelectorAll('img[data-header-avatar], .nav-avatar img, .app-nav .avatar');
     avatars.forEach(img => {
         if (!isAuth) {
             img.src = GUEST_AVATAR;
             img.alt = 'Войти';
         } else {
-            // Заменим на аватар пользователя, если бэк его отдал
             img.src = img.dataset.userAvatar || AUTH_AVATAR_DEFAULT;
         }
     });
 
-    // Ссылки на аватар
     document.querySelectorAll('a.nav-avatar').forEach(a => {
         a.href = isAuth ? 'dashboard.html' : 'login.html';
         a.title = isAuth ? 'Личный кабинет' : 'Войти';
     });
 
-    // ---- Баллы в шапке / кнопка «Записаться» ----
     const scoreBadges = document.querySelectorAll('#headerScore, .score-badge[data-dynamic]');
     scoreBadges.forEach(el => {
         if (!isAuth) {
@@ -286,21 +246,21 @@ async function initHeader() {
         }
     });
 
-    // Если не залогинен — подменяем .score-badge на «Записаться»
     if (!isAuth) {
         document.querySelectorAll('.app-nav-actions').forEach(actions => {
-            const hasScore = actions.querySelector('.score-badge');
-            if (!hasScore) return;
-            // Уже есть кнопка? не дублируем
             if (actions.querySelector('.header-join-btn')) return;
+
+            const score = actions.querySelector('.score-badge');
+            if (score) score.style.display = 'none';
+
             const btn = document.createElement('a');
             btn.href = 'login.html';
             btn.className = 'header-join-btn btn-primary btn-pill';
             btn.textContent = 'Записаться';
-            actions.insertBefore(btn, hasScore);
+
+            actions.appendChild(btn);
         });
     } else {
-        // Залогинен — тянем avg_score
         try {
             const me = await getCurrentUser();
             const avg = me && me.stats ? me.stats.avg_score : null;
@@ -309,10 +269,9 @@ async function initHeader() {
                     el.textContent = `${Math.round(Number(avg))} баллов`;
                 });
             }
-        } catch (_) { /* ignore */ }
+        } catch (_) {}
     }
 
-    // ---- Мобильное меню: ссылка «Личный кабинет» vs «Войти» ----
     document.querySelectorAll('.mobile-avatar').forEach(el => {
         if (!isAuth) {
             el.textContent = 'Войти';
@@ -324,9 +283,6 @@ async function initHeader() {
     });
 }
 
-// =============================================
-// МОДАЛКА МАТЕРИАЛА / ЗАДАНИЯ
-// =============================================
 let _currentModalMaterial = null;
 
 function ensureMaterialModal() {
@@ -420,7 +376,6 @@ function renderMaterialFooter(material, onComplete) {
 }
 
 async function openMaterial(materialId, opts = {}) {
-    // Если не залогинен — редирект на логин
     const token = document.cookie.split('; ').find(r => r.startsWith('session_token='));
     if (!token) {
         window.location.href = 'login.html';
@@ -542,9 +497,6 @@ async function openAssignment(assignment, opts = {}) {
 
 Object.assign(window, { openMaterial, openAssignment });
 
-// =============================================
-// DASHBOARD
-// =============================================
 async function loadDashboard() {
     try {
         const user = await getCurrentUser();
@@ -666,14 +618,11 @@ function renderDashboard(data) {
                 });
             });
         } else {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--main-text);">🎉 Нет заданий на эту неделю</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--main-text);">Нет заданий</td></tr>`;
         }
     }
 }
 
-// =============================================
-// KNOWLEDGE BASE
-// =============================================
 async function loadKnowledgeBase(filters = {}) {
     try {
         const data = await getMaterials(filters);
@@ -694,7 +643,6 @@ async function loadKnowledgeBase(filters = {}) {
 function renderKnowledgeBase(data, filters = {}) {
     const { items = [], stats = {} } = data;
 
-    // Статы в шапке
     const statNums = document.querySelectorAll('.kb-head-stats .mini-stat .num');
     if (statNums.length >= 3) {
         statNums[0].textContent = stats.total_materials || 0;
@@ -702,21 +650,19 @@ function renderKnowledgeBase(data, filters = {}) {
         statNums[2].textContent = stats.total_viewed    || 0;
     }
 
-    // ---- Сортировка ----
-    // Значение select#kbSort: date_desc, date_asc, title_asc, title_desc
     const sort = filters.sort || 'default';
     let sortedItems = items.slice();
+
     if (sort === 'title_asc') {
-        sortedItems.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        sortedItems.sort((a, b) => (a.title || '').localeCompare(b.title || '', 'ru'));
     } else if (sort === 'title_desc') {
-        sortedItems.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+        sortedItems.sort((a, b) => (b.title || '').localeCompare(a.title || '', 'ru'));
     } else if (sort === 'duration_asc') {
         sortedItems.sort((a, b) => (a.duration_minutes || 0) - (b.duration_minutes || 0));
     } else if (sort === 'duration_desc') {
         sortedItems.sort((a, b) => (b.duration_minutes || 0) - (a.duration_minutes || 0));
     }
 
-    // Группируем по slug предмета (сохраняем порядок появления)
     const bySubject = new Map();
     for (const m of sortedItems) {
         const key = m.subject_slug || 'other';
@@ -731,13 +677,19 @@ function renderKnowledgeBase(data, filters = {}) {
         bySubject.get(key).items.push(m);
     }
 
+    let sections = Array.from(bySubject.values());
+
+    if (sort === 'subject_asc') {
+        sections.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'ru'));
+    } else if (sort === 'subject_desc') {
+        sections.sort((a, b) => (b.name || '').localeCompare(a.name || '', 'ru'));
+    }
+
     const container = document.querySelector('.kb');
     if (!container) return;
 
-    // Удаляем все .subject-section и всё, что мы сами добавляли
     container.querySelectorAll('.subject-section, .kb__error').forEach(el => el.remove());
 
-    // Если ничего нет — сообщение
     if (bySubject.size === 0) {
         const empty = document.createElement('div');
         empty.className = 'kb__error';
@@ -746,7 +698,7 @@ function renderKnowledgeBase(data, filters = {}) {
         return;
     }
 
-    for (const section of bySubject.values()) {
+    for (const section of sections) {
         const sec = document.createElement('div');
         sec.className = 'subject-section';
         sec.dataset.subject = section.slug;
@@ -765,7 +717,6 @@ function renderKnowledgeBase(data, filters = {}) {
         container.appendChild(sec);
     }
 
-    // Делегируем клики
     if (!container.dataset.bound) {
         container.dataset.bound = '1';
         container.addEventListener('click', (e) => {
@@ -815,9 +766,6 @@ function materialCardHTML(m) {
     `;
 }
 
-// =============================================
-// SUPPORT
-// =============================================
 async function initSupport() {
     const chatBody = document.querySelector('.chat-body');
     const chatForm = document.querySelector('.chat-input-row');
@@ -839,7 +787,6 @@ async function initSupport() {
         const text = input.value.trim();
         if (!text) return;
 
-        // Если не залогинен — ведём на вход
         const token = document.cookie.split('; ').find(r => r.startsWith('session_token='));
         if (!token) {
             window.location.href = 'login.html';
@@ -881,9 +828,6 @@ function renderSupportMessages(messages, container) {
     container.scrollTop = container.scrollHeight;
 }
 
-// =============================================
-// SCHEDULE
-// =============================================
 let currentWeekStart = null;
 const SCHED_HOURS = [9,10,11,12,13,14,15,16,17,18];
 const DOW_LABELS = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
@@ -917,7 +861,6 @@ function renderSchedule(data) {
         stats[2].textContent = data.stats.completed;
     }
 
-    // DESKTOP
     document.querySelectorAll('.day-head').forEach((el, i) => {
         const d = new Date(startDate);
         d.setDate(d.getDate() + i);
@@ -972,7 +915,6 @@ function renderSchedule(data) {
         });
     }
 
-    // MOBILE
     renderMobileSchedule(startDate, data.lessons || []);
 }
 
@@ -1091,13 +1033,9 @@ Object.assign(window, {
     initHeader,
 });
 
-// =============================================
-// ИНИЦИАЛИЗАЦИЯ
-// =============================================
 document.addEventListener('DOMContentLoaded', function () {
     const path = window.location.pathname;
 
-    // Header — на всех страницах, кроме login/register
     if (!path.includes('login') && !path.includes('register')) {
         initHeader();
     }
