@@ -28,10 +28,6 @@ if (!$user || !verify_password($password, $user['password_hash'])) {
 // Создаем сессию
 $token = create_session((int)$user['id']);
 
-// Обновляем время последнего входа
-$pdo->prepare('UPDATE users SET last_login = NOW() WHERE id = :id')
-    ->execute(['id' => $user['id']]);
-
 // Убираем пароль из ответа
 unset($user['password_hash']);
 

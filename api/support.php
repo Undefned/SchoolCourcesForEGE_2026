@@ -56,11 +56,11 @@ if ($method === 'GET') {
 
     $messages = $stmt->fetchAll();
 
-    // Помечаем входящие как прочитанные
+    // Помечаем входящие как прочитанные (без read_at — колонки нет в новой схеме)
     if ($userId !== null) {
         $pdo->prepare('
             UPDATE support_messages 
-            SET is_read = TRUE, read_at = NOW()
+            SET is_read = TRUE
             WHERE user_id = :userId 
               AND is_from_support = TRUE 
               AND is_read = FALSE

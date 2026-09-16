@@ -23,7 +23,6 @@ $stmt = $pdo->prepare('
         s.color_code,
         s.icon,
         ul.status as user_status,
-        ul.attended_at,
         u.full_name as teacher_name
     FROM lessons l
     JOIN subjects s ON s.id = l.subject_id

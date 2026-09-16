@@ -20,8 +20,7 @@ if ($method === 'GET') {
             us.total_lessons_attended,
             us.total_assignments_completed,
             us.avg_score,
-            us.streak_days,
-            us.last_activity_date
+            us.streak_days
         FROM users u
         LEFT JOIN user_stats us ON us.user_id = u.id
         WHERE u.id = :userId
@@ -34,8 +33,7 @@ if ($method === 'GET') {
     }
 
     // =============================================
-    // Считаем активные дни (простейший streak: 
-    // количество уникальных дат, когда были graded-задания)
+    // Считаем активные дни (уникальные даты graded-заданий)
     // =============================================
     $streakStmt = $pdo->prepare('
         SELECT COUNT(DISTINCT DATE(submitted_at)) AS active_days
@@ -75,26 +73,21 @@ if ($method === 'GET') {
     $activityStmt->execute(['userId' => $userId]);
     $activity = $activityStmt->fetchAll();
 
-    // Обновляем user_stats (streak, last_activity_date) — чтобы UI видел свежие данные
+    
+
+    // Обновляем streak в user_stats
     $pdo->prepare('
         UPDATE user_stats
-        SET streak_days = :streak,
-            last_activity_date = (
-                SELECT MAX(DATE(submitted_at))
-                FROM assignment_submissions
-                WHERE user_id = :userId AND status = \'graded\'
-            ),
-            updated_at = NOW()
+        SET streak_days = :streak
         WHERE user_id = :userId
     ')->execute(['streak' => $activeDays, 'userId' => $userId]);
 
-    // Подставляем свежие значения в ответ
+    // Подставляем свежие значения
     $userData['streak_days'] = $activeDays;
 
     // =============================================
     // Прогресс по предметам
     // progress = средний балл по graded-заданиям этого предмета
-    // Если graded-заданий нет — 0
     // =============================================
     $progressStmt = $pdo->prepare('
         SELECT
@@ -104,7 +97,6 @@ if ($method === 'GET') {
             s.color_code,
             s.icon,
             us.target_score,
-            us.started_at,
             COALESCE((
                 SELECT ROUND(AVG(sub.score))
                 FROM assignment_submissions sub
@@ -177,7 +169,7 @@ if ($method === 'PUT') {
         json_success(['message' => 'Нет данных для обновления']);
     }
     
-    $sql = 'UPDATE users SET ' . implode(', ', $updates) . ', updated_at = NOW() WHERE id = :userId';
+    $sql = 'UPDATE users SET ' . implode(', ', $updates) . ' WHERE id = :userId';
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     

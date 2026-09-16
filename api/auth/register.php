@@ -48,13 +48,13 @@ $user = $stmt->fetch();
 $newUserId = (int)$user['id'];
 
 // =============================================
-// 4A: автоматически подписываем на все активные предметы
+// Автоматически подписываем на все активные предметы
 // =============================================
 $subjectsStmt = $pdo->query('SELECT id FROM subjects WHERE is_active = TRUE');
 foreach ($subjectsStmt->fetchAll() as $subject) {
     $pdo->prepare('
-        INSERT INTO user_subjects (user_id, subject_id, progress, target_score)
-        VALUES (:uid, :sid, 0, 80)
+        INSERT INTO user_subjects (user_id, subject_id, target_score)
+        VALUES (:uid, :sid, 80)
         ON CONFLICT (user_id, subject_id) DO NOTHING
     ')->execute([
         'uid' => $newUserId,

@@ -30,7 +30,6 @@ $sql = '
         m.description,
         m.type,
         m.content,
-        m.cover_url,
         m.task_count,
         m.duration_minutes,
         m.sort_order,

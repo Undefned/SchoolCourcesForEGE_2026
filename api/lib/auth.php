@@ -29,15 +29,13 @@ function create_session(int $userId): string
     
     // Создаем новую сессию
     $stmt = $pdo->prepare('
-        INSERT INTO sessions (user_id, session_token, ip_address, user_agent, expires_at)
-        VALUES (:userId, :token, :ip, :userAgent, :expiresAt)
+        INSERT INTO sessions (user_id, session_token, expires_at)
+        VALUES (:userId, :token, :expiresAt)
     ');
     
     $stmt->execute([
-        'userId' => $userId,
-        'token' => $token,
-        'ip' => $_SERVER['REMOTE_ADDR'] ?? null,
-        'userAgent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+        'userId'    => $userId,
+        'token'     => $token,
         'expiresAt' => $expiresAt,
     ]);
     
@@ -76,12 +74,6 @@ function get_session_user(): ?array
     if (!$user) {
         return null;
     }
-    
-    // Обновляем время последней активности
-    $pdo->prepare('
-        UPDATE sessions SET updated_at = NOW() 
-        WHERE session_token = :token
-    ')->execute(['token' => $token]);
     
     return $user;
 }

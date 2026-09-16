@@ -31,7 +31,6 @@ if ($method === 'GET') {
             a.title,
             a.description,
             a.material_id,
-            a.points_possible,
             a.due_date,
             s.name        AS subject_name,
             s.slug        AS subject_slug,
@@ -48,7 +47,7 @@ if ($method === 'GET') {
         JOIN subjects s ON s.id = a.subject_id
         LEFT JOIN assignment_submissions sub
                ON sub.assignment_id = a.id AND sub.user_id = :userId
-        WHERE a.due_date >= CURRENT_DATE - INTERVAL \'7 days\'
+        WHERE a.due_date >= CURRENT_DATE - INTERVAL \'30 days\'
     ';
 
     $params = ['userId' => $userId];
@@ -140,10 +139,10 @@ if (!$assignmentId && $materialId) {
     if ($row) {
         $assignmentId = (int)$row['id'];
     } else {
-        // Вариант C: автоматически создаём assignment под этот материал
+        // Автоматически создаём assignment под этот материал
         $stmt = $pdo->prepare('
-            INSERT INTO assignments (subject_id, title, description, material_id, points_possible, due_date)
-            VALUES (:sid, :title, :descr, :mid, 100, CURRENT_DATE + INTERVAL \'30 days\')
+            INSERT INTO assignments (subject_id, title, description, material_id, due_date)
+            VALUES (:sid, :title, :descr, :mid, CURRENT_DATE + INTERVAL \'30 days\')
             RETURNING id
         ');
         $stmt->execute([
@@ -190,8 +189,6 @@ if ($action === 'start') {
 
 // =============================================
 // action = complete → graded + случайный балл (60..100)
-// ВАЖНО: балл — не сумма, а одно значение. Средний балл пользователя
-// считается триггером update_user_stats как AVG(score) по graded.
 // =============================================
 $score = random_int(60, 100);
 
@@ -217,19 +214,17 @@ $row = $stmt->fetch();
 
 // Пересчитываем stats (на случай, если триггер не сработал)
 $pdo->prepare('
-    INSERT INTO user_stats (user_id, total_lessons_attended, total_assignments_completed, avg_score, updated_at)
+    INSERT INTO user_stats (user_id, total_lessons_attended, total_assignments_completed, avg_score)
     VALUES (
         :uid,
         (SELECT COUNT(*) FROM user_lessons WHERE user_id = :uid AND status = \'attended\'),
         (SELECT COUNT(*) FROM assignment_submissions WHERE user_id = :uid AND status = \'graded\'),
-        COALESCE((SELECT AVG(score) FROM assignment_submissions WHERE user_id = :uid AND status = \'graded\'), 0),
-        NOW()
+        COALESCE((SELECT AVG(score) FROM assignment_submissions WHERE user_id = :uid AND status = \'graded\'), 0)
     )
     ON CONFLICT (user_id) DO UPDATE SET
         total_lessons_attended      = EXCLUDED.total_lessons_attended,
         total_assignments_completed = EXCLUDED.total_assignments_completed,
-        avg_score                   = EXCLUDED.avg_score,
-        updated_at                  = EXCLUDED.updated_at
+        avg_score                   = EXCLUDED.avg_score
 ')->execute(['uid' => $userId]);
 
 // Забираем актуальный avg_score

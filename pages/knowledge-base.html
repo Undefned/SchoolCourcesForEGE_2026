@@ -24,8 +24,8 @@
     <div class="app-nav-actions">
       <span class="score-badge" id="headerScore">—</span>
     </div>
-    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    <a href="login.html" class="nav-avatar" title="Войти">
+      <img class="avatar" src="../assets/profile.svg" alt="Аватар пользователя" data-header-avatar>
     </a>
     <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
       <span></span><span></span><span></span>
@@ -67,10 +67,16 @@
     <div class="card search-card">
       <div class="search-row">
         <label class="search-input">
-          <img src="../assets/search.svg"><input type="text" id="kbSearch" placeholder="Найти материал, тему или предмет...">
+          <img src="../assets/search.svg" alt="">
+          <input type="text" id="kbSearch" placeholder="Найти материал, тему или предмет...">
         </label>
-        <div class="filter-btn"><img src="../assets/filter.svg">Фильтры</div>
-        <div class="sort-chip">По дате <img src="../assets/open.svg"></div>
+        <select class="sort-chip" id="kbSort">
+          <option value="default">По умолчанию</option>
+          <option value="title_asc">Название: А → Я</option>
+          <option value="title_desc">Название: Я → А</option>
+          <option value="duration_asc">Длительность: по возрастанию</option>
+          <option value="duration_desc">Длительность: по убыванию</option>
+        </select>
       </div>
       <div class="subject-pills">
         <button class="pill-filter active" data-subject="all">Все</button>

@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/style.css">
-
 </head>
 <body>
 
@@ -23,10 +22,10 @@
       <li><a href="support.html">Поддержка</a></li>
     </ul>
     <div class="app-nav-actions">
-      <span class="score-badge">85 баллов</span>
+      <span class="score-badge" id="headerScore">—</span>
     </div>
-    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    <a href="login.html" class="nav-avatar" title="Войти">
+      <img class="avatar" src="../assets/profile.svg" alt="Аватар пользователя" data-header-avatar>
     </a>
     <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
       <span></span><span></span><span></span>
@@ -37,7 +36,6 @@
     <a href="schedule.html">Расписание</a>
     <a href="knowledge-base.html">База знаний</a>
     <a href="support.html">Поддержка</a>
-    <div class="mobile-score">85 баллов</div>
   </div>
 </div>
 <div class="breadcrumb-wrap">
@@ -57,235 +55,36 @@
     <div class="card sched-head">
       <div>
         <h2>Расписание</h2>
-        <div class="sub" id="week-range-label">25 авг – 30 авг 2026</div>
+        <div class="sub" id="week-range-label">Загрузка...</div>
       </div>
       <div class="sched-head-stats">
-        <div class="mini-stat"><span class="num" style="color:var(--purple)">16</span><span class="label">Занятий в неделю</span></div>
-        <div class="mini-stat"><span class="num" style="color:var(--blue)">20</span><span class="label">Часов</span></div>
-        <div class="mini-stat"><span class="num" style="color:var(--green)">2</span><span class="label">Выполнено</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--purple)">—</span><span class="label">Занятий в неделю</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--blue)">—</span><span class="label">Часов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--green)">—</span><span class="label">Выполнено</span></div>
       </div>
     </div>
 
     <div class="week-nav">
       <button class="nav-arrow" aria-label="Предыдущая неделя">‹</button>
-      <span class="label">25 авг – 30 авг 2026</span>
+      <span class="label">Загрузка...</span>
       <button class="nav-arrow" aria-label="Следующая неделя">›</button>
     </div>
 
-    <!-- ===== МОБИЛЬНЫЙ ВИД: один день вместо недели ===== -->
-    <div class="day-picker">
-      <button class="day-tab" data-day="1"><span class="dow">Пн</span><span class="date">25</span></button>
-      <button class="day-tab" data-day="2"><span class="dow">Вт</span><span class="date">26</span></button>
-      <button class="day-tab" data-day="3"><span class="dow">Ср</span><span class="date">27</span></button>
-      <button class="day-tab active" data-day="4"><span class="dow">Чт</span><span class="date">28</span></button>
-      <button class="day-tab" data-day="5"><span class="dow">Пт</span><span class="date">29</span></button>
-      <button class="day-tab" data-day="6"><span class="dow">Сб</span><span class="date">30</span></button>
-    </div>
+    <!-- Мобильное расписание: табы по дням + панель активного дня -->
+    <div class="day-picker"></div>
+    <div class="day-agenda"></div>
 
-    <div class="day-agenda">
-      <div class="day-agenda-panel" data-day="1">
-        <div class="day-agenda-head">
-          <span class="date-title">Понедельник, 25 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#8A15EA;">
-          <div class="row"><span class="time">9:00 — 11:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Математика</div>
-          <div class="teacher">Иванова М. С.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-
-      <div class="day-agenda-panel" data-day="2">
-        <div class="day-agenda-head">
-          <span class="date-title">Вторник, 26 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#F04438;">
-          <div class="row"><span class="time">11:00 — 13:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Физика</div>
-          <div class="teacher">Сидоров А. Н.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-
-      <div class="day-agenda-panel" data-day="3">
-        <div class="day-agenda-head">
-          <span class="date-title">Среда, 27 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#2B7FFF;">
-          <div class="row"><span class="time">13:00 — 15:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Обществознание</div>
-          <div class="teacher">Волков С. П.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-
-      <div class="day-agenda-panel active" data-day="4">
-        <div class="day-agenda-head">
-          <span class="date-title">Четверг, 28 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#8A15EA;">
-          <div class="row"><span class="time">11:00 — 13:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Математика</div>
-          <div class="teacher">Иванова М. С.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-
-      <div class="day-agenda-panel" data-day="5">
-        <div class="day-agenda-head">
-          <span class="date-title">Пятница, 29 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#75EA15;">
-          <div class="row"><span class="time">15:00 — 17:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Русский язык</div>
-          <div class="teacher">Петрова Л. А.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-
-      <div class="day-agenda-panel" data-day="6">
-        <div class="day-agenda-head">
-          <span class="date-title">Суббота, 30 августа</span>
-          <span class="day-agenda-count">1 занятие</span>
-        </div>
-        <div class="day-event-card" style="--event-color:#8A15EA;">
-          <div class="row"><span class="time">14:00 — 16:00</span><span class="badge">Вебинар</span></div>
-          <div class="subject">Математика</div>
-          <div class="teacher">Иванова М. С.</div>
-          <button class="btn-soft">Открыть</button>
-        </div>
-      </div>
-    </div>
-    <!-- ================================================== -->
-
-    <!-- ===== ДЕСКТОП: сетка на всю неделю (скрыта на мобиле) ===== -->
+    <!-- Desktop-сетка (скрывается на мобиле через CSS) -->
     <div class="card schedule-wrap">
       <div class="schedule-grid">
-        <div class="day-head" style="grid-column:2"><div class="dow">Пн</div><div class="date">25</div></div>
-        <div class="day-head" style="grid-column:3"><div class="dow">Вт</div><div class="date">26</div></div>
-        <div class="day-head" style="grid-column:4"><div class="dow">Ср</div><div class="date">27</div></div>
-        <div class="day-head today" style="grid-column:5"><div class="dow">Чт</div><div class="date">28</div></div>
-        <div class="day-head" style="grid-column:6"><div class="dow">Пт</div><div class="date">29</div></div>
-        <div class="day-head" style="grid-column:7"><div class="dow">Сб</div><div class="date">30</div></div>
-
-        <div class="time-cell" style="grid-row:2">9:00</div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:2;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:3">10:00</div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:3;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:4">11:00</div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:4;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:5">12:00</div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:5;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:6">13:00</div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:6;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:7">14:00</div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:7;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:8">15:00</div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:8;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:9">16:00</div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:9;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:10">17:00</div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:10;grid-column:7"></div>
-
-        <div class="time-cell" style="grid-row:11">18:00</div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:2"></div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:3"></div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:4"></div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:5"></div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:6"></div>
-        <div class="day-col-bg" style="grid-row:11;grid-column:7"></div>
-
-        <div class="event" style="grid-column:2;grid-row:2 / span 2;--event-color:#8A15EA;">
-          <span class="title">Математика</span>
-          <span class="teacher">Иванова М. С.</span>
-          <span class="badge">Вебинар</span>
-        </div>
-        <div class="event" style="grid-column:3;grid-row:4 / span 2;--event-color:#F04438;">
-          <span class="title">Физика</span>
-          <span class="teacher">Сидоров А. Н.</span>
-          <span class="badge">Вебинар</span>
-        </div>
-        <div class="event" style="grid-column:4;grid-row:6 / span 2;--event-color:#2B7FFF;">
-          <span class="title">Обществознание</span>
-          <span class="teacher">Волков С. П.</span>
-          <span class="badge">Вебинар</span>
-        </div>
-        <div class="event" style="grid-column:5;grid-row:4 / span 2;--event-color:#8A15EA;">
-          <span class="title">Математика</span>
-          <span class="teacher">Иванова М. С.</span>
-          <span class="badge">Вебинар</span>
-        </div>
-        <div class="event" style="grid-column:6;grid-row:8 / span 2;--event-color:#75EA15;">
-          <span class="title">Русский язык</span>
-          <span class="teacher">Петрова Л. А.</span>
-          <span class="badge">Вебинар</span>
-        </div>
-        <div class="event" style="grid-column:7;grid-row:7 / span 2;--event-color:#8A15EA;">
-          <span class="title">Математика</span>
-          <span class="teacher">Иванова М. С.</span>
-          <span class="badge">Вебинар</span>
-        </div>
+        <div class="day-head" style="grid-column:2"><div class="dow"></div><div class="date"></div></div>
+        <div class="day-head" style="grid-column:3"><div class="dow"></div><div class="date"></div></div>
+        <div class="day-head" style="grid-column:4"><div class="dow"></div><div class="date"></div></div>
+        <div class="day-head" style="grid-column:5"><div class="dow"></div><div class="date"></div></div>
+        <div class="day-head" style="grid-column:6"><div class="dow"></div><div class="date"></div></div>
+        <div class="day-head" style="grid-column:7"><div class="dow"></div><div class="date"></div></div>
       </div>
     </div>
-    <!-- ================================================== -->
 
   </div>
 </main>
@@ -323,27 +122,8 @@
     </div>
   </div>
 </footer>
-<!-- ============================================================================================ -->
 
 <script src="../scripts/app.js"></script>
-<script>
-  document.querySelectorAll('.day-tab').forEach(function(tab){
-    tab.addEventListener('click', function(){
-      var day = tab.getAttribute('data-day');
-      document.querySelectorAll('.day-tab').forEach(function(t){ t.classList.remove('active'); });
-      tab.classList.add('active');
-      document.querySelectorAll('.day-agenda-panel').forEach(function(panel){
-        panel.classList.toggle('active', panel.getAttribute('data-day') === day);
-      });
-    });
-  });
-
-  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
-    el.addEventListener('click', function(){
-      document.querySelector('.app-nav-wrap').classList.remove('menu-open');
-    });
-  });
-</script>
 
 </body>
 </html>

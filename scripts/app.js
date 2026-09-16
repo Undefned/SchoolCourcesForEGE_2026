@@ -1,5 +1,5 @@
 // =============================================
-// API_BASE — вычисляется от текущего пути
+// API_BASE
 // =============================================
 const API_BASE = (() => {
   const path = window.location.pathname;
@@ -11,11 +11,9 @@ const API_BASE = (() => {
 console.log('API_BASE =', API_BASE);
 
 // =============================================
-// БАЗОВЫЙ ФЕТЧ — дописывает .php
+// БАЗОВЫЙ ФЕТЧ
 // =============================================
 async function fetchApi(endpoint, options = {}) {
-  // endpoint: '/materials', '/auth/login', '/applications', '/support' ...
-  // Разбираем на path и query
   let path  = endpoint;
   let query = '';
   const qIdx = endpoint.indexOf('?');
@@ -23,14 +21,10 @@ async function fetchApi(endpoint, options = {}) {
     path  = endpoint.slice(0, qIdx);
     query = endpoint.slice(qIdx);
   }
-
-  // Если ещё нет .php — добавляем
   if (!path.endsWith('.php')) {
     path = path + '.php';
   }
-
   const url = `${API_BASE}${path}${query}`;
-  console.log('→ API', options.method || 'GET', url);
 
   const headers = {
     'Accept': 'application/json',
@@ -66,12 +60,12 @@ async function fetchApi(endpoint, options = {}) {
     } else {
       const short = raw.replace(/\s+/g, ' ').trim().slice(0, 200);
       if (response.status === 404) {
-        throw new Error(`API не найден: ${url}. Проверь, что файл лежит по этому пути. Ответ: ${short}`);
+        throw new Error(`API не найден: ${url}. Ответ: ${short}`);
       }
       if (response.status === 405) {
-        throw new Error(`Метод ${options.method || 'GET'} не разрешён для ${url}. Ответ: ${short}`);
+        throw new Error(`Метод ${options.method || 'GET'} не разрешён. Ответ: ${short}`);
       }
-      throw new Error(`Сервер вернул не-JSON (${response.status}). URL: ${url}. Ответ: ${short}`);
+      throw new Error(`Сервер вернул не-JSON (${response.status}). Ответ: ${short}`);
     }
   }
 
@@ -130,10 +124,6 @@ async function getAssignments(filters = {}) {
     return fetchApi('/assignments' + (params.toString() ? '?' + params.toString() : ''));
 }
 
-/**
- * Начать задание (in_progress).
- * Можно передать {assignmentId} или {materialId}.
- */
 async function startAssignment({ assignmentId = null, materialId = null }) {
     return fetchApi('/assignments', {
         method: 'POST',
@@ -141,9 +131,6 @@ async function startAssignment({ assignmentId = null, materialId = null }) {
     });
 }
 
-/**
- * Завершить задание (graded + random score).
- */
 async function completeAssignment({ assignmentId = null, materialId = null }) {
     return fetchApi('/assignments', {
         method: 'POST',
@@ -253,6 +240,91 @@ Object.assign(window, {
 });
 
 // =============================================
+// HEADER: аватар + баллы или кнопка «Записаться»
+// =============================================
+const GUEST_AVATAR = (() => {
+    // путь к profile.svg относительно текущей страницы
+    const inPages = window.location.pathname.includes('/pages/');
+    return inPages ? '../assets/profile.svg' : 'assets/profile.svg';
+})();
+
+const AUTH_AVATAR_DEFAULT = (() => {
+    const inPages = window.location.pathname.includes('/pages/');
+    return inPages ? '../assets/Avatar.png' : 'assets/Avatar.png';
+})();
+
+async function initHeader() {
+    const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('session_token='));
+    const isAuth = !!token;
+
+    // ---- Аватарки во всех местах ----
+    const avatars = document.querySelectorAll('img[data-header-avatar], .nav-avatar img, .app-nav .avatar');
+    avatars.forEach(img => {
+        if (!isAuth) {
+            img.src = GUEST_AVATAR;
+            img.alt = 'Войти';
+        } else {
+            // Заменим на аватар пользователя, если бэк его отдал
+            img.src = img.dataset.userAvatar || AUTH_AVATAR_DEFAULT;
+        }
+    });
+
+    // Ссылки на аватар
+    document.querySelectorAll('a.nav-avatar').forEach(a => {
+        a.href = isAuth ? 'dashboard.html' : 'login.html';
+        a.title = isAuth ? 'Личный кабинет' : 'Войти';
+    });
+
+    // ---- Баллы в шапке / кнопка «Записаться» ----
+    const scoreBadges = document.querySelectorAll('#headerScore, .score-badge[data-dynamic]');
+    scoreBadges.forEach(el => {
+        if (!isAuth) {
+            el.textContent = '';
+            el.style.display = 'none';
+        }
+    });
+
+    // Если не залогинен — подменяем .score-badge на «Записаться»
+    if (!isAuth) {
+        document.querySelectorAll('.app-nav-actions').forEach(actions => {
+            const hasScore = actions.querySelector('.score-badge');
+            if (!hasScore) return;
+            // Уже есть кнопка? не дублируем
+            if (actions.querySelector('.header-join-btn')) return;
+            const btn = document.createElement('a');
+            btn.href = 'login.html';
+            btn.className = 'header-join-btn btn-primary btn-pill';
+            btn.textContent = 'Записаться';
+            actions.insertBefore(btn, hasScore);
+        });
+    } else {
+        // Залогинен — тянем avg_score
+        try {
+            const me = await getCurrentUser();
+            const avg = me && me.stats ? me.stats.avg_score : null;
+            if (avg != null && !isNaN(Number(avg))) {
+                scoreBadges.forEach(el => {
+                    el.textContent = `${Math.round(Number(avg))} баллов`;
+                });
+            }
+        } catch (_) { /* ignore */ }
+    }
+
+    // ---- Мобильное меню: ссылка «Личный кабинет» vs «Войти» ----
+    document.querySelectorAll('.mobile-avatar').forEach(el => {
+        if (!isAuth) {
+            el.textContent = 'Войти';
+            el.href = 'login.html';
+        } else {
+            el.textContent = 'Личный кабинет';
+            el.href = 'dashboard.html';
+        }
+    });
+}
+
+// =============================================
 // МОДАЛКА МАТЕРИАЛА / ЗАДАНИЯ
 // =============================================
 let _currentModalMaterial = null;
@@ -276,7 +348,6 @@ function ensureMaterialModal() {
 
     modal.querySelector('#materialModalClose').addEventListener('click', () => modal.close());
     modal.addEventListener('click', (e) => {
-        // клик по backdrop
         const rect = modal.getBoundingClientRect();
         const inDialog = e.clientX >= rect.left && e.clientX <= rect.right
                       && e.clientY >= rect.top  && e.clientY <= rect.bottom;
@@ -284,8 +355,6 @@ function ensureMaterialModal() {
     });
     modal.addEventListener('close', () => {
         _currentModalMaterial = null;
-        // На некоторых мобильных браузерах <dialog> остаётся в потоке
-        // и «призраком» висит под футером. Убираем совсем.
         setTimeout(() => {
             if (!modal.open) modal.remove();
         }, 0);
@@ -298,17 +367,14 @@ function renderMaterialBody(material) {
     const content = material.content || '';
 
     if (type === 'video') {
-        // content может быть либо URL YouTube, либо готовый iframe src
         let src = content.trim();
         const ytMatch = src.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]{6,})/);
         if (ytMatch) src = `https://www.youtube.com/embed/${ytMatch[1]}`;
         return `<div class="material-modal__video"><iframe src="${escapeHtml(src)}" allowfullscreen frameborder="0"></iframe></div>`;
     }
     if (type === 'conspect') {
-        // просто выводим как HTML (доверяем контенту из БД)
         return `<div class="material-modal__conspect">${content || '<p>Конспект в разработке.</p>'}</div>`;
     }
-    // test / task
     return `
         <div class="material-modal__task">
             <p>${escapeHtml(material.description || 'Описание задания отсутствует.')}</p>
@@ -322,7 +388,6 @@ function renderMaterialFooter(material, onComplete) {
     footer.innerHTML = '';
 
     if (material.type === 'conspect' || material.type === 'video') {
-        // для конспектов/видео — только «Прочитано» (это просто просмотр, баллов не даёт)
         footer.innerHTML = `<span class="material-modal__hint">Этот материал доступен без задания</span>`;
         return;
     }
@@ -354,18 +419,18 @@ function renderMaterialFooter(material, onComplete) {
     footer.appendChild(btn);
 }
 
-/**
- * Открыть материал по id.
- * @param {number} materialId
- * @param {object} [opts] { assignmentId?: number } — если задание уже найдено (dashboard)
- */
 async function openMaterial(materialId, opts = {}) {
+    // Если не залогинен — редирект на логин
+    const token = document.cookie.split('; ').find(r => r.startsWith('session_token='));
+    if (!token) {
+        window.location.href = 'login.html';
+        return;
+    }
+
     let material = null;
     try {
-        // Пытаемся взять из кэша (см. loadKnowledgeBase)
         material = (window.__cachedMaterials || []).find(m => m.id === materialId);
         if (!material) {
-            // fallback — грузим через /materials?search= (не самый эффективный, но ок)
             const data = await getMaterials({ limit: 100 });
             material = (data.items || []).find(m => m.id === materialId);
         }
@@ -386,12 +451,10 @@ async function openMaterial(materialId, opts = {}) {
 
     renderMaterialFooter(material, async () => {
         const result = await completeAssignment({ materialId });
-        // обновим объект и UI
         material.is_completed = true;
         material.user_score = result.score;
         material.assignment_id = result.assignmentId;
 
-        // Обновим карточку в DOM
         const card = document.querySelector(`.material-card[data-material-id="${materialId}"]`);
         if (card) {
             card.classList.add('material-card--done');
@@ -402,16 +465,13 @@ async function openMaterial(materialId, opts = {}) {
             }
         }
 
-        // Перерисуем футер
         renderMaterialFooter(material, () => {});
 
-        // Обновим avg_score в шапке (если есть)
         const headerScore = document.getElementById('headerScore');
         if (headerScore && result.avgScore != null) {
             headerScore.textContent = `${result.avgScore} баллов`;
         }
 
-        // Показать успех
         const footer = document.getElementById('materialModalFooter');
         const ok = document.createElement('div');
         ok.className = 'material-modal__success';
@@ -421,22 +481,17 @@ async function openMaterial(materialId, opts = {}) {
 
     modal.showModal();
 
-    // Фиксируем просмотр
     if (!material.is_viewed) {
         try { await viewMaterial(materialId); } catch (_) {}
         material.is_viewed = true;
     }
 }
 
-/**
- * Открыть задание (из dashboard). Знает assignmentId и materialId (если есть).
- */
 async function openAssignment(assignment, opts = {}) {
     if (assignment.material_id) {
         return openMaterial(assignment.material_id, { assignmentId: assignment.id });
     }
 
-    // Материала нет — открываем «заглушку» задания
     _currentModalMaterial = { type: 'task', title: assignment.title, description: assignment.description };
 
     const modal = ensureMaterialModal();
@@ -454,7 +509,6 @@ async function openAssignment(assignment, opts = {}) {
         async () => {
             const result = await completeAssignment({ assignmentId: assignment.id });
 
-            // Обновляем строку таблицы
             const row = document.querySelector(`tr[data-assignment-id="${assignment.id}"]`);
             if (row) {
                 const statusCell = row.querySelector('[data-cell="status"]');
@@ -511,7 +565,6 @@ async function loadDashboard() {
 function renderDashboard(data) {
     const { profile = {}, subjects = [], assignments = [] } = data || {};
 
-    // Профиль
     const nameEl = document.getElementById('profileName');
     const emailEl = document.getElementById('profileEmail');
     const avatarEl = document.getElementById('profileAvatar');
@@ -520,25 +573,22 @@ function renderDashboard(data) {
     if (avatarEl) {
         avatarEl.src = (profile.avatar_url && profile.avatar_url !== '/uploads/avatars/default.png')
             ? profile.avatar_url
-            : '../assets/Avatar.png';
+            : AUTH_AVATAR_DEFAULT;
     }
 
-    // Средний балл в шапке (avg_score, НЕ сумма)
     const headerScore = document.getElementById('headerScore');
     if (headerScore) {
         const avg = Math.round(profile.avg_score || 0);
         headerScore.textContent = avg > 0 ? `${avg} баллов` : '—';
     }
 
-    // Статы
     const statLessons = document.getElementById('statLessons');
     const statScore = document.getElementById('statScore');
     const statStreak = document.getElementById('statStreak');
-    if (statLessons) statLessons.textContent = profile.total_lessons_attended || 0;
+    if (statLessons) statLessons.textContent = profile.total_assignments_completed || 0;
     if (statScore)   statScore.textContent   = Math.round(profile.avg_score || 0);
     if (statStreak) statStreak.textContent = profile.streak_days != null ? profile.streak_days : 0;
 
-    // Предметы
     const subjectList = document.getElementById('subjectList');
     if (subjectList) {
         if (subjects.length) {
@@ -559,7 +609,6 @@ function renderDashboard(data) {
         }
     }
 
-    // График активности (реальные данные из /user → activity)
     const weeklyBars = document.getElementById('weeklyBars');
     if (weeklyBars) {
         const activity = data.activity || [];
@@ -585,7 +634,6 @@ function renderDashboard(data) {
         }
     }
 
-    // Задания
     const tbody = document.getElementById('assignmentsBody');
     if (tbody) {
         if (assignments.length) {
@@ -609,7 +657,6 @@ function renderDashboard(data) {
                 `;
             }).join('');
 
-            // Клик по строке → открыть задание
             tbody.querySelectorAll('tr[data-assignment-id]').forEach(row => {
                 row.style.cursor = 'pointer';
                 row.addEventListener('click', () => {
@@ -631,7 +678,7 @@ async function loadKnowledgeBase(filters = {}) {
     try {
         const data = await getMaterials(filters);
         window.__cachedMaterials = data.items || [];
-        renderKnowledgeBase(data);
+        renderKnowledgeBase(data, filters);
     } catch (err) {
         console.error('Ошибка загрузки материалов:', err);
         const container = document.querySelector('.kb');
@@ -644,7 +691,7 @@ async function loadKnowledgeBase(filters = {}) {
     }
 }
 
-function renderKnowledgeBase(data) {
+function renderKnowledgeBase(data, filters = {}) {
     const { items = [], stats = {} } = data;
 
     // Статы в шапке
@@ -655,9 +702,23 @@ function renderKnowledgeBase(data) {
         statNums[2].textContent = stats.total_viewed    || 0;
     }
 
-    // Группируем по slug предмета
+    // ---- Сортировка ----
+    // Значение select#kbSort: date_desc, date_asc, title_asc, title_desc
+    const sort = filters.sort || 'default';
+    let sortedItems = items.slice();
+    if (sort === 'title_asc') {
+        sortedItems.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+    } else if (sort === 'title_desc') {
+        sortedItems.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+    } else if (sort === 'duration_asc') {
+        sortedItems.sort((a, b) => (a.duration_minutes || 0) - (b.duration_minutes || 0));
+    } else if (sort === 'duration_desc') {
+        sortedItems.sort((a, b) => (b.duration_minutes || 0) - (a.duration_minutes || 0));
+    }
+
+    // Группируем по slug предмета (сохраняем порядок появления)
     const bySubject = new Map();
-    for (const m of items) {
+    for (const m of sortedItems) {
         const key = m.subject_slug || 'other';
         if (!bySubject.has(key)) {
             bySubject.set(key, {
@@ -673,11 +734,17 @@ function renderKnowledgeBase(data) {
     const container = document.querySelector('.kb');
     if (!container) return;
 
-    // Удаляем все старые .subject-section (кроме служебных элементов)
-    container.querySelectorAll('.subject-section').forEach(el => el.remove());
+    // Удаляем все .subject-section и всё, что мы сами добавляли
+    container.querySelectorAll('.subject-section, .kb__error').forEach(el => el.remove());
 
-    // Рендерим секции после .search-card
-    const searchCard = container.querySelector('.search-card');
+    // Если ничего нет — сообщение
+    if (bySubject.size === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'kb__error';
+        empty.textContent = 'Ничего не найдено по заданным фильтрам.';
+        container.appendChild(empty);
+        return;
+    }
 
     for (const section of bySubject.values()) {
         const sec = document.createElement('div');
@@ -743,7 +810,7 @@ function materialCardHTML(m) {
                 <span>${m.task_count || 0} заданий</span>
                 <span>${m.duration_minutes || 30} мин</span>
             </div>
-            <button class="btn-soft" type="button">${isDone ? 'Открыть' : 'Открыть'}</button>
+            <button class="btn-soft" type="button">Открыть</button>
         </article>
     `;
 }
@@ -771,6 +838,13 @@ async function initSupport() {
         const input = this.querySelector('input');
         const text = input.value.trim();
         if (!text) return;
+
+        // Если не залогинен — ведём на вход
+        const token = document.cookie.split('; ').find(r => r.startsWith('session_token='));
+        if (!token) {
+            window.location.href = 'login.html';
+            return;
+        }
 
         try {
             await sendSupportMessage(text);
@@ -843,6 +917,7 @@ function renderSchedule(data) {
         stats[2].textContent = data.stats.completed;
     }
 
+    // DESKTOP
     document.querySelectorAll('.day-head').forEach((el, i) => {
         const d = new Date(startDate);
         d.setDate(d.getDate() + i);
@@ -856,45 +931,147 @@ function renderSchedule(data) {
     document.querySelectorAll('.time-cell, .day-col-bg').forEach(e => e.remove());
 
     const grid = document.querySelector('.schedule-grid');
-    if (!grid) return;
+    if (grid) {
+        SCHED_HOURS.forEach((hour, rowIdx) => {
+            const row = rowIdx + 2;
+            const timeCell = document.createElement('div');
+            timeCell.className = 'time-cell';
+            timeCell.style.gridRow = row;
+            timeCell.textContent = `${hour}:00`;
+            grid.appendChild(timeCell);
+            for (let col = 2; col <= 7; col++) {
+                const bg = document.createElement('div');
+                bg.className = 'day-col-bg';
+                bg.style.gridRow = row;
+                bg.style.gridColumn = col;
+                grid.appendChild(bg);
+            }
+        });
 
-    SCHED_HOURS.forEach((hour, rowIdx) => {
-        const row = rowIdx + 2;
-        const timeCell = document.createElement('div');
-        timeCell.className = 'time-cell';
-        timeCell.style.gridRow = row;
-        timeCell.textContent = `${hour}:00`;
-        grid.appendChild(timeCell);
-        for (let col = 2; col <= 7; col++) {
-            const bg = document.createElement('div');
-            bg.className = 'day-col-bg';
-            bg.style.gridRow = row;
-            bg.style.gridColumn = col;
-            grid.appendChild(bg);
-        }
-    });
+        (data.lessons || []).forEach(lesson => {
+            const dt = new Date(lesson.scheduled_at);
+            const dayIdx = (dt.getDay() + 6) % 7;
+            if (dayIdx > 5) return;
+            const col = dayIdx + 2;
+            const startHour = dt.getHours() + dt.getMinutes() / 60;
+            const hourIdx = SCHED_HOURS.findIndex(h => h === Math.floor(startHour));
+            if (hourIdx === -1) return;
+            const row = hourIdx + 2;
+            const span = Math.max(1, Math.round(lesson.duration_minutes / 60));
+            const ev = document.createElement('div');
+            ev.className = 'event';
+            ev.style.gridColumn = col;
+            ev.style.gridRow = `${row} / span ${span}`;
+            ev.style.setProperty('--event-color', lesson.color_code || '#8A15EA');
+            ev.innerHTML = `
+                <span class="title">${escapeHtml(lesson.title || lesson.subject_name)}</span>
+                <span class="teacher">${escapeHtml(lesson.teacher_name || '')}</span>
+                <span class="badge">Вебинар</span>
+            `;
+            grid.appendChild(ev);
+        });
+    }
 
-    (data.lessons || []).forEach(lesson => {
+    // MOBILE
+    renderMobileSchedule(startDate, data.lessons || []);
+}
+
+function renderMobileSchedule(startDate, lessons) {
+    const picker = document.querySelector('.day-picker');
+    const agenda = document.querySelector('.day-agenda');
+    if (!picker || !agenda) return;
+
+    const DOW_SHORT = ['Пн','Вт','Ср','Чт','Пт','Сб'];
+
+    const byDay = { 0:[], 1:[], 2:[], 3:[], 4:[], 5:[] };
+    lessons.forEach(lesson => {
         const dt = new Date(lesson.scheduled_at);
         const dayIdx = (dt.getDay() + 6) % 7;
         if (dayIdx > 5) return;
-        const col = dayIdx + 2;
-        const startHour = dt.getHours() + dt.getMinutes() / 60;
-        const hourIdx = SCHED_HOURS.findIndex(h => h === Math.floor(startHour));
-        if (hourIdx === -1) return;
-        const row = hourIdx + 2;
-        const span = Math.max(1, Math.round(lesson.duration_minutes / 60));
-        const ev = document.createElement('div');
-        ev.className = 'event';
-        ev.style.gridColumn = col;
-        ev.style.gridRow = `${row} / span ${span}`;
-        ev.style.setProperty('--event-color', lesson.color_code || '#8A15EA');
-        ev.innerHTML = `
-            <span class="title">${escapeHtml(lesson.subject_name)}</span>
-            <span class="teacher">${escapeHtml(lesson.teacher_name || '')}</span>
-            <span class="badge">Вебинар</span>
+        byDay[dayIdx].push(lesson);
+    });
+
+    const today = new Date();
+    let activeDay = (today.getDay() + 6) % 7;
+    const todayStr = today.toDateString();
+    const rangeStartStr = startDate.toDateString();
+    const rangeEnd = new Date(startDate);
+    rangeEnd.setDate(rangeEnd.getDate() + 5);
+    if (todayStr < rangeStartStr || todayStr > rangeEnd.toDateString()) {
+        activeDay = 0;
+    }
+    if (activeDay > 5) activeDay = 0;
+
+    picker.innerHTML = DOW_SHORT.map((dow, i) => {
+        const d = new Date(startDate);
+        d.setDate(d.getDate() + i);
+        const isActive = i === activeDay;
+        return `
+            <button class="day-tab ${isActive ? 'active' : ''}" data-day="${i}">
+                <span class="dow">${dow}</span>
+                <span class="date">${d.getDate()}</span>
+            </button>
         `;
-        grid.appendChild(ev);
+    }).join('');
+
+    const MONTHS = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+    const FULL_DOW = ['Понедельник','Вторник','Среда','Четверг','Пятница','Суббота'];
+
+    agenda.innerHTML = DOW_SHORT.map((_, i) => {
+        const d = new Date(startDate);
+        d.setDate(d.getDate() + i);
+        const isActive = i === activeDay;
+        const dayLessons = byDay[i].slice().sort((a, b) => new Date(a.scheduled_at) - new Date(b.scheduled_at));
+        const countLabel = dayLessons.length === 0
+            ? 'нет занятий'
+            : `${dayLessons.length} ${pluralize(dayLessons.length, ['занятие','занятия','занятий'])}`;
+        const dateTitle = `${FULL_DOW[i]}, ${d.getDate()} ${MONTHS[d.getMonth()]}`;
+
+        const cards = dayLessons.length === 0
+            ? `<div class="day-agenda-empty">На этот день занятий нет</div>`
+            : dayLessons.map(lesson => {
+                const dt = new Date(lesson.scheduled_at);
+                const timeStart = dt.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+                const endDt = new Date(dt.getTime() + (lesson.duration_minutes || 60) * 60000);
+                const timeEnd = endDt.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit'});
+                const color = lesson.color_code || '#8A15EA';
+                const type = lesson.lesson_type || 'webinar';
+                const typeLabel = {
+                    webinar: 'Вебинар', practice: 'Практика',
+                    lecture: 'Лекция', consultation: 'Консультация'
+                }[type] || 'Вебинар';
+                return `
+                    <div class="day-event-card" style="--event-color:${color};">
+                        <div class="row">
+                            <span class="time">${timeStart} — ${timeEnd}</span>
+                            <span class="badge">${typeLabel}</span>
+                        </div>
+                        <div class="subject">${escapeHtml(lesson.title || lesson.subject_name || '')}</div>
+                        <div class="teacher">${escapeHtml(lesson.teacher_name || '')}</div>
+                    </div>
+                `;
+            }).join('');
+
+        return `
+            <div class="day-agenda-panel ${isActive ? 'active' : ''}" data-day="${i}">
+                <div class="day-agenda-head">
+                    <span class="date-title">${dateTitle}</span>
+                    <span class="day-agenda-count">${countLabel}</span>
+                </div>
+                ${cards}
+            </div>
+        `;
+    }).join('');
+
+    picker.querySelectorAll('.day-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const day = Number(tab.dataset.day);
+            picker.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            agenda.querySelectorAll('.day-agenda-panel').forEach(p => {
+                p.classList.toggle('active', Number(p.dataset.day) === day);
+            });
+        });
     });
 }
 
@@ -905,13 +1082,25 @@ function shiftWeek(days) {
     loadSchedule(d.toISOString().slice(0, 10));
 }
 
-Object.assign(window, { loadDashboard, renderDashboard, loadKnowledgeBase, renderKnowledgeBase, openMaterial, openAssignment, initSupport, renderSupportMessages, loadSchedule, renderSchedule, shiftWeek });
+Object.assign(window, {
+    loadDashboard, renderDashboard,
+    loadKnowledgeBase, renderKnowledgeBase,
+    openMaterial, openAssignment,
+    initSupport, renderSupportMessages,
+    loadSchedule, renderSchedule, shiftWeek,
+    initHeader,
+});
 
 // =============================================
 // ИНИЦИАЛИЗАЦИЯ
 // =============================================
 document.addEventListener('DOMContentLoaded', function () {
     const path = window.location.pathname;
+
+    // Header — на всех страницах, кроме login/register
+    if (!path.includes('login') && !path.includes('register')) {
+        initHeader();
+    }
 
     if (path.includes('dashboard'))       loadDashboard();
     if (path.includes('knowledge-base'))  loadKnowledgeBase();
