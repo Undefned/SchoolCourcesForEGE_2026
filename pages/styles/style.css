@@ -1,16 +1,7 @@
 /* =====================================================================
    ЭКЗАМЕТРИКА — единый итоговый style.css
    ---------------------------------------------------------------------
-   Собран из двух версий общего стиля:
-   - база (переменные, сброс, кнопки, card/mini-stat, оба навбара —
-     маркетинговый pill и app-навбар, футер, breadcrumb, адаптив) взята
-     из «новой» общей таблицы стилей как более полной по токенам;
-   - из «старой» версии добавлены недостающие в базе блоки: выпадающее
-     меню аккаунта, мобильное гамбургер-меню, страницы login/register
-     и все стили конкретных страниц (landing, about, privacy, dashboard,
-     schedule, knowledge-base, blog, support, teachers).
-
-   Структура файла:
+   Структура:
    1. Переменные и сброс
    2. Общие компоненты (кнопки, card, mini-stat, section-title)
    3. Маркетинговый навбар (index / about / privacy) + мобильное меню
@@ -20,10 +11,12 @@
    6. Контейнер приложения (.app-container)
    7. Футер (общий на всех страницах, кроме login / register)
    8. Страницы авторизации (login + register)
-   9. Стили конкретных страниц — каждая в своём корневом классе
-      (.dash, .sched, .kb, .blog, .support, .teachers, .about-*,
-      .privacy-*), изменения внутри блока одной страницы не задевают
-      вёрстку других.
+   9. Стили конкретных страниц
+   10. МОБИЛЬНЫЕ ПРАВКИ — единый хедер (лого/аватар/бургер, без rounded-bug),
+       мобильная поддержка (табы «чат / вопросы»), мобильное расписание
+       (один день вместо недели), мобильный дашборд (карточки вместо
+       таблицы заданий). Всё внутри @media (max-width:640/700px), поэтому
+       десктоп не затронут.
 ===================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -228,6 +221,14 @@ button,.btn{
 }
 .mobile-menu .btn-primary{ width:100%; margin-top:12px; }
 .mobile-menu .mobile-avatar{ color:var(--white); text-align:center; padding:14px 4px 0; }
+.mobile-menu .mobile-score{
+  margin-top:8px;
+  padding:10px 4px 0;
+  color:var(--green);
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+}
 .nav-wrap.menu-open .mobile-menu{ display:flex; }
 .nav-wrap.menu-open .nav{ border-radius:24px 24px 0 0; }
 
@@ -263,7 +264,7 @@ button,.btn{
 }
 .avatar{ width:36px; height:36px; border-radius:50%; object-fit:cover; }
 
-/* ---- Аватар с выпадающим меню аккаунта ---- */
+/* ---- Аватар с выпадающим меню аккаунта (используется на dashboard.html) ---- */
 .nav-avatar-wrap{ position:relative; display:flex; align-items:center; }
 .nav-avatar{
   width:36px;
@@ -355,21 +356,12 @@ button,.btn{
 .footer-col a:hover{ color:var(--white); }
 
 /* ---------------------------------------------------------------------
-   Адаптив — общие элементы шапки/футера
+   Адаптив — общие элементы шапки/футера (960px)
 --------------------------------------------------------------------- */
 @media (max-width:960px){
   .nav-links{ display:none; }
-  .nav-toggle{ display:flex; }
   .app-nav-links{ display:none; }
   .section-title{ font-size:32px; }
-}
-@media (max-width:640px){
-  .nav{ padding:10px 10px 10px 20px; }
-  .app-nav-wrap{ padding:16px 20px 0; }
-  .app-nav{ padding:0 8px 0 20px; }
-  .breadcrumb-wrap{ padding:12px 20px; }
-  .site-footer{ padding:48px 20px; }
-  .footer-copy{ display:block; }
 }
 
 /* =====================================================================
@@ -711,10 +703,56 @@ button,.btn{
 .dash .empty-state .icon{ font-size:48px; display:block; margin-bottom:16px; }
 
 @media (max-width:700px){
-  .assign-table{ display:block; overflow-x:auto; white-space:nowrap; }
   .profile-row{ flex-direction:column; }
   .profile-card{ flex-direction:column; text-align:center; }
   .profile-stats{ flex-direction:column; }
+  .profile-stats .mini-stat{
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+    gap:12px;
+    min-height:0;
+    padding:16px;
+  }
+  .profile-stats .mini-stat .num{ font-size:22px; }
+
+  .subject-row .btn-continue{ width:100%; order:3; }
+
+  /* Заявки: таблица -> карточки */
+  .assign-table thead{ display:none; }
+  .assign-table,
+  .assign-table tbody,
+  .assign-table tr,
+  .assign-table td{ display:block; width:100%; white-space:normal; }
+  .assign-table tr{
+    background:var(--white);
+    border:1px solid var(--stroke);
+    border-radius:14px;
+    padding:4px 14px;
+    margin-bottom:10px;
+  }
+  .assign-table td{
+    border-bottom:1px solid var(--back);
+    padding:10px 0;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    text-align:right;
+  }
+  .assign-table td:last-child{ border-bottom:none; }
+  .assign-table td::before{
+    content:attr(data-label);
+    color:var(--main-text);
+    font-size:12px;
+    font-weight:600;
+    text-align:left;
+  }
+  .assign-table td:nth-child(1)::before{ content:"Задание"; }
+  .assign-table td:nth-child(2)::before{ content:"Предмет"; }
+  .assign-table td:nth-child(3)::before{ content:"Статус"; }
+  .assign-table td:nth-child(4)::before{ content:"Дедлайн"; }
+  .assign-table td:nth-child(5)::before{ content:"Баллы"; }
 }
 
 /* ---------- 9.5 Schedule (schedule.html) ---------- */
@@ -747,8 +785,61 @@ button,.btn{
 .event .teacher{ color:var(--main-text); font-size:12px; }
 .event .badge{ align-self:flex-start; padding:3px 10px; background:var(--video-bg); color:var(--blue); border-radius:100px; font-size:10px; font-weight:700; }
 
+/* мобильный день-пикер + повестка дня — скрыты на десктопе */
+.day-picker{ display:none; }
+.day-agenda{ display:none; }
+
 @media (max-width:640px){
   .sched-head-stats{ width:100%; }
+  .sched-head-stats .mini-stat{ background:var(--back); border:none; border-radius:12px; padding:12px; min-width:0; }
+
+  /* прячем недельную сетку, показываем один день */
+  .schedule-wrap{ display:none; }
+
+  .day-picker{
+    display:flex;
+    background:var(--white);
+    border:1px solid var(--stroke);
+    border-radius:16px;
+    overflow:hidden;
+  }
+  .day-tab{
+    flex:1;
+    background:none;
+    border:none;
+    padding:10px 2px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+  }
+  .day-tab .dow{ font-size:11px; color:var(--main-text); font-weight:500; }
+  .day-tab .date{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:15px; color:var(--black); }
+  .day-tab.active{ background:var(--back); }
+
+  .day-agenda{ display:flex; flex-direction:column; gap:12px; }
+  .day-agenda-panel{ display:none; flex-direction:column; gap:12px; }
+  .day-agenda-panel.active{ display:flex; }
+  .day-agenda-head{ display:flex; justify-content:space-between; align-items:center; }
+  .day-agenda-head .date-title{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:18px; }
+  .day-agenda-count{ padding:4px 10px; background:var(--back); border-radius:100px; font-size:12px; font-weight:500; color:var(--main-text); }
+
+  .day-event-card{
+    background:var(--white);
+    border:1px solid var(--event-color, var(--blue));
+    border-radius:14px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+  .day-event-card .row{ display:flex; justify-content:space-between; align-items:center; }
+  .day-event-card .time{ font-size:12px; font-weight:600; color:var(--main-text); letter-spacing:.05em; }
+  .day-event-card .badge{ padding:4px 12px; background:var(--video-bg); color:var(--blue); border-radius:100px; font-size:10px; font-weight:700; }
+  .day-event-card .subject{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:14px; }
+  .day-event-card .teacher{ color:var(--main-text); font-size:13px; }
+
+  .day-agenda-empty{ text-align:center; padding:40px 20px; color:var(--main-text); font-size:14px; }
 }
 
 /* ---------- 9.6 Knowledge base (knowledge-base.html) ---------- */
@@ -867,9 +958,35 @@ button,.btn{
 .support-faq-item.open .support-faq-a{ max-height:200px; }
 .support-faq-a p{ padding:0 0 20px; color:var(--main-text); font-size:14px; line-height:1.7; }
 
+/* переключатель «Чат с куратором / Частые вопросы» — виден только на мобиле */
+.support-tabs{ display:none; }
+
 @media (max-width:640px){
   .support h2{ font-size:34px; }
-  .chat-card{ height:480px; }
+
+  .support-tabs{
+    display:flex;
+    padding:3px;
+    background:#ECEBEB;
+    border-radius:12px;
+    gap:3px;
+  }
+  .support-tabs button{
+    flex:1;
+    background:none;
+    border:none;
+    border-radius:10px;
+    padding:8px 4px;
+    font-size:14px;
+    font-weight:500;
+    color:#4D4D4D;
+  }
+  .support-tabs button.active{ background:var(--white); color:var(--black); }
+
+  .support-row{ flex-direction:column; }
+  .chat-card,.faq-card{ display:none; width:100%; max-width:none; }
+  .chat-card.active-panel,.faq-card.active-panel{ display:flex; }
+  .chat-card{ height:500px; }
 }
 
 /* ---------- 9.9 Teachers (teachers.html) ---------- */
@@ -897,4 +1014,240 @@ button,.btn{
 }
 @media (max-width:640px){
   .teachers h2{ font-size:34px; }
+}
+
+/* =====================================================================
+   10. МОБИЛЬНЫЕ ПРАВКИ ХЕДЕРА — ЕДИНЫЕ ДЛЯ ВСЕХ СТРАНИЦ (640px)
+   ---------------------------------------------------------------------
+   Главный баг-фикс: .nav-wrap был display:flex БЕЗ flex-direction,
+   поэтому .nav и .mobile-menu стояли в один ряд и меню расползалось на
+   весь экран. Добавляем flex-direction:column — и всё встаёт на место.
+   Хедер становится плоской чёрной полосой на всю ширину (без пилюли),
+   лого слева, аватар + бургер справа, баллы прячутся внутрь бургера.
+===================================================================== */
+@media (max-width:640px){
+  /* --- маркетинговый хедер --- */
+  .nav-wrap{
+    flex-direction:column;
+    position:sticky;
+    top:0;
+    padding:0;
+  }
+  .nav{
+    max-width:none;
+    width:100%;
+    border-radius:0;
+    box-shadow:none;
+    padding:12px 16px;
+    height:60px;
+  }
+  .nav-wrap.menu-open .nav{ border-radius:0; }
+  .nav-links,.nav-actions .btn-primary{ display:none; }
+  .nav-actions{ display:flex; align-items:center; gap:10px; }
+  .nav-toggle{ display:flex; }
+
+  .mobile-menu{ border-radius:0; }
+
+  /* --- app-хедер (dashboard/schedule/kb/blog/support/teachers) --- */
+  .app-nav-wrap{ padding:0; position:sticky; top:0; z-index:50; }
+  .app-nav{
+    border-radius:0;
+    box-shadow:none;
+    padding:12px 16px;
+    height:60px;
+  }
+  .app-nav-links{ display:none; }
+  .app-nav-actions .score-badge{ display:none; }
+  .app-nav-actions{ display:flex; align-items:center; }
+
+  .app-nav .nav-toggle{ display:flex; }
+  .app-nav-wrap .mobile-menu{ border-radius:0; }
+
+  /* аватар — общий для обоих хедеров, всегда виден, чуть левее бургера */
+  .nav-avatar,.nav-avatar-wrap{ display:flex; }
+  .nav-avatar img,.nav-avatar .avatar,.app-nav .avatar{ width:32px; height:32px; }
+  .account-dropdown{ right:-8px; }
+
+  .breadcrumb-wrap{ padding:12px 16px; }
+  .breadcrumb{ font-size:12px; }
+
+  .site-footer{ padding:48px 16px; }
+  .footer-inner{ flex-direction:column; align-items:flex-start; gap:24px; }
+  .footer-cols{ flex-direction:column; gap:24px; width:100%; }
+  .footer-copy{ display:block; }
+}
+
+
+/* =====================================================================
+   МОДАЛКА МАТЕРИАЛА / ЗАДАНИЯ
+   ===================================================================== */
+.material-modal {
+    border: none;
+    border-radius: 20px;
+    padding: 0;
+    width: min(720px, calc(100% - 32px));
+    max-height: min(90vh, 900px);
+    background: var(--white);
+    color: var(--header);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.material-modal::backdrop {
+    background: rgba(10, 12, 18, 0.6);
+    backdrop-filter: blur(4px);
+}
+.material-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--stroke);
+}
+.material-modal__title {
+    font-family: 'Unbounded', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1.3;
+    margin: 0;
+}
+.material-modal__close {
+    background: var(--back);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--header);
+    flex: none;
+    cursor: pointer;
+    transition: background .15s ease;
+}
+.material-modal__close:hover { background: #e5e6ea; }
+
+.material-modal__body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--header);
+}
+.material-modal__video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.material-modal__video iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none;
+}
+.material-modal__conspect h1,
+.material-modal__conspect h2,
+.material-modal__conspect h3 {
+    font-family: 'Unbounded', sans-serif;
+    margin: 16px 0 8px;
+}
+.material-modal__conspect p { margin: 0 0 12px; }
+.material-modal__conspect ul,
+.material-modal__conspect ol { padding-left: 22px; margin: 0 0 12px; }
+
+.material-modal__task p { margin: 0 0 12px; }
+.material-modal__task-content {
+    background: var(--back);
+    border-radius: 12px;
+    padding: 16px;
+    white-space: pre-wrap;
+    font-size: 14px;
+}
+.material-modal__hint {
+    color: var(--main-text);
+    font-size: 13px;
+    display: block;
+    margin-top: 8px;
+}
+
+.material-modal__footer {
+    padding: 16px 24px 20px;
+    border-top: 1px solid var(--stroke);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+}
+.material-modal__footer .btn-primary {
+    padding: 12px 28px;
+}
+.material-modal__done {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--status-done-bg);
+    color: var(--status-done-text);
+    padding: 10px 18px;
+    border-radius: 100px;
+    font-weight: 700;
+    font-size: 14px;
+}
+.material-modal__done-check {
+    background: #1E5A13;
+    color: var(--white);
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+.material-modal__success {
+    background: var(--status-done-bg);
+    color: var(--status-done-text);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Карточка материала — выполнено */
+.material-card--done {
+    border-color: #6EE7B7;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F4FFF9 100%);
+}
+.material-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.material-card__score {
+    background: var(--status-done-bg);
+    color: var(--status-done-text);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+/* Строка таблицы заданий — курсор */
+.assign-table tbody tr[data-assignment-id]:hover {
+    background: #f9fafb;
+}
+
+/* Мобильная адаптация модалки */
+@media (max-width: 640px) {
+    .material-modal { width: calc(100% - 16px); max-height: 92vh; }
+    .material-modal__header { padding: 16px; }
+    .material-modal__body { padding: 16px; font-size: 14px; }
+    .material-modal__footer { padding: 12px 16px 16px; }
+    .material-modal__title { font-size: 16px; }
 }

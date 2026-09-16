@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/style.css">
-
 </head>
 <body>
 
@@ -23,10 +22,21 @@
       <li><a href="support.html">Поддержка</a></li>
     </ul>
     <div class="app-nav-actions">
-      <span class="score-badge">85 баллов</span>
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+      <span class="score-badge" id="headerScore">—</span>
     </div>
+    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
+      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    </a>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="dashboard.html">Мое обучение</a>
+    <a href="schedule.html">Расписание</a>
+    <a href="knowledge-base.html">База знаний</a>
+    <a href="support.html">Поддержка</a>
+  </div>
 </div>
 <div class="breadcrumb-wrap">
   <div class="breadcrumb">
@@ -48,16 +58,16 @@
         <div class="sub">Конспекты, тесты и видеоматериалы по всем дисциплинам ЕГЭ</div>
       </div>
       <div class="kb-head-stats">
-        <div class="mini-stat"><span class="num" style="color:var(--purple)">148</span><span class="label">Материалов</span></div>
-        <div class="mini-stat"><span class="num" style="color:var(--blue)">7</span><span class="label">Предметов</span></div>
-        <div class="mini-stat"><span class="num" style="color:var(--green)">42</span><span class="label">Просмотрено</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--purple)">—</span><span class="label">Материалов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--blue)">—</span><span class="label">Предметов</span></div>
+        <div class="mini-stat"><span class="num" style="color:var(--green)">—</span><span class="label">Просмотрено</span></div>
       </div>
     </div>
 
     <div class="card search-card">
       <div class="search-row">
         <label class="search-input">
-          <img src="../assets/search.svg"><input type="text" placeholder="Найти материал, тему или предмет...">
+          <img src="../assets/search.svg"><input type="text" id="kbSearch" placeholder="Найти материал, тему или предмет...">
         </label>
         <div class="filter-btn"><img src="../assets/filter.svg">Фильтры</div>
         <div class="sort-chip">По дате <img src="../assets/open.svg"></div>
@@ -73,209 +83,7 @@
       </div>
     </div>
 
-    <div class="subject-section" data-subject="math">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#8A15EA"></span>
-          <h3>Математика</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Производная и ее применение</div>
-          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
-          <div class="material-meta"><span>24 заданий</span><span>45 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
-          <div class="material-title">Тригонометрические уравнения</div>
-          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
-          <div class="material-meta"><span>15 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-task"><span class="icon">📝</span>Задания</span>
-          <div class="material-title">Геометрия: планиметрия. Часть 2</div>
-          <div class="material-tag"><span class="dot" style="background:#8A15EA"></span><span>Математика</span></div>
-          <div class="material-meta"><span>32 задания</span><span>45 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
-
-    <div class="subject-section" data-subject="russian">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#75EA15"></span>
-          <h3>Русский язык</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
-          <div class="material-title">Лексика и фразеология ЕГЭ</div>
-          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
-          <div class="material-meta"><span>14 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Алгоритм написания сочинения 27</div>
-          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
-          <div class="material-meta"><span>24 заданий</span><span>45 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
-          <div class="material-title">Пунктуация: сложные случаи</div>
-          <div class="material-tag"><span class="dot" style="background:#75EA15"></span><span>Русский язык</span></div>
-          <div class="material-meta"><span>20 заданий</span><span>50 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
-
-    <div class="subject-section" data-subject="social">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#2B7FFF"></span>
-          <h3>Обществознание</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
-          <div class="material-title">Социальные нормы и институты</div>
-          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
-          <div class="material-meta"><span>22 задания</span><span>45 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Правовая система РФ</div>
-          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
-          <div class="material-meta"><span>22 задания</span><span>35 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
-          <div class="material-title">Экономика: основные понятия</div>
-          <div class="material-tag"><span class="dot" style="background:#2B7FFF"></span><span>Обществознание</span></div>
-          <div class="material-meta"><span>10 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
-
-    <div class="subject-section" data-subject="physics">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#F04438"></span>
-          <h3>Физика</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Механика: кинематика и динамика</div>
-          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
-          <div class="material-meta"><span>22 задания</span><span>25 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
-          <div class="material-title">Электродинамика: законы</div>
-          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
-          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Термодинамика: задачи ЕГЭ</div>
-          <div class="material-tag"><span class="dot" style="background:#F04438"></span><span>Физика</span></div>
-          <div class="material-meta"><span>15 заданий</span><span>35 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
-
-    <div class="subject-section" data-subject="history">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#F79009"></span>
-          <h3>История</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
-          <div class="material-title">Россия в XX веке: ключевые события</div>
-          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
-          <div class="material-meta"><span>22 задания</span><span>25 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
-          <div class="material-title">Исторические личности: таблица</div>
-          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
-          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-default"><span class="icon">📄</span>Конспект</span>
-          <div class="material-title">Культура России: хронология</div>
-          <div class="material-tag"><span class="dot" style="background:#F79009"></span><span>История</span></div>
-          <div class="material-meta"><span>15 заданий</span><span>35 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
-
-    <div class="subject-section" data-subject="biology">
-      <div class="subject-header">
-        <div class="left">
-          <span class="subject-dot" style="background:#12B76A"></span>
-          <h3>Биология</h3>
-          <span class="count-pill">3 материала</span>
-        </div>
-        <a href="#" class="see-all">Все материалы →</a>
-      </div>
-      <div class="material-grid">
-        <article class="material-card">
-          <span class="type-badge type-test"><span class="icon">✅</span>Тест</span>
-          <div class="material-title">Клетка: строение и функции</div>
-          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
-          <div class="material-meta"><span>22 задания</span><span>35 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-task"><span class="icon">📝</span>Задания</span>
-          <div class="material-title">Генетика: законы Менделя + задачи</div>
-          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
-          <div class="material-meta"><span>12 заданий</span><span>30 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-        <article class="material-card">
-          <span class="type-badge type-video"><span class="icon">▶</span>Видео</span>
-          <div class="material-title">Эволюция: теории и доказательства</div>
-          <div class="material-tag"><span class="dot" style="background:#12B76A"></span><span>Биология</span></div>
-          <div class="material-meta"><span>10 заданий</span><span>50 мин</span></div>
-          <button class="btn-soft">Открыть</button>
-        </article>
-      </div>
-    </div>
+    <!-- Секции с материалами рендерит app.js -->
 
   </div>
 </main>
@@ -313,6 +121,53 @@
     </div>
   </div>
 </footer>
+<!-- ============================================================================================ -->
+
+<script src="../scripts/app.js"></script>
+<script>
+  // ===== Фильтр по предметам + поиск =====
+  document.addEventListener('DOMContentLoaded', function () {
+    const pills = document.querySelectorAll('.pill-filter');
+    const search = document.getElementById('kbSearch');
+
+    function currentFilters() {
+      const active = document.querySelector('.pill-filter.active');
+      const subject = active && active.dataset.subject !== 'all' ? active.dataset.subject : null;
+      const q = search ? search.value.trim() : '';
+      return { subject, search: q || null };
+    }
+
+    pills.forEach(p => {
+      p.addEventListener('click', () => {
+        pills.forEach(x => x.classList.remove('active'));
+        p.classList.add('active');
+        loadKnowledgeBase(currentFilters());
+      });
+    });
+
+    if (search) {
+      let t = null;
+      search.addEventListener('input', () => {
+        clearTimeout(t);
+        t = setTimeout(() => loadKnowledgeBase(currentFilters()), 300);
+      });
+    }
+
+    // Закрытие мобильного меню
+    document.querySelectorAll('.mobile-menu a').forEach(a => {
+      a.addEventListener('click', () => document.querySelector('.app-nav-wrap').classList.remove('menu-open'));
+    });
+
+    // Заголовок со средним баллом
+    if (window.getCurrentUser) {
+      getCurrentUser()
+        .then(u => {
+          // если бэк возвращает user со stats — можно, но у нас stats в /user
+        })
+        .catch(() => {});
+    }
+  });
+</script>
 
 </body>
 </html>

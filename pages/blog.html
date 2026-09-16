@@ -23,9 +23,21 @@
     </ul>
     <div class="app-nav-actions">
       <span class="score-badge">85 баллов</span>
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
     </div>
+    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
+      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    </a>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="dashboard.html">Мое обучение</a>
+    <a href="schedule.html">Расписание</a>
+    <a href="knowledge-base.html">База знаний</a>
+    <a href="support.html">Поддержка</a>
+    <div class="mobile-score">85 баллов</div>
+  </div>
 </div>
 <!-- ================================================================================================ -->
 
@@ -112,6 +124,14 @@
   </div>
 </footer>
 <!-- ============================================================================================ -->
+
+<script>
+  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.querySelector('.app-nav-wrap').classList.remove('menu-open');
+    });
+  });
+</script>
 
 </body>
 </html>

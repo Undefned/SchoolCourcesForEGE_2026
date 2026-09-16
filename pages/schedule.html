@@ -24,9 +24,21 @@
     </ul>
     <div class="app-nav-actions">
       <span class="score-badge">85 баллов</span>
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
     </div>
+    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
+      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    </a>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="dashboard.html">Мое обучение</a>
+    <a href="schedule.html">Расписание</a>
+    <a href="knowledge-base.html">База знаний</a>
+    <a href="support.html">Поддержка</a>
+    <div class="mobile-score">85 баллов</div>
+  </div>
 </div>
 <div class="breadcrumb-wrap">
   <div class="breadcrumb">
@@ -60,6 +72,98 @@
       <button class="nav-arrow" aria-label="Следующая неделя">›</button>
     </div>
 
+    <!-- ===== МОБИЛЬНЫЙ ВИД: один день вместо недели ===== -->
+    <div class="day-picker">
+      <button class="day-tab" data-day="1"><span class="dow">Пн</span><span class="date">25</span></button>
+      <button class="day-tab" data-day="2"><span class="dow">Вт</span><span class="date">26</span></button>
+      <button class="day-tab" data-day="3"><span class="dow">Ср</span><span class="date">27</span></button>
+      <button class="day-tab active" data-day="4"><span class="dow">Чт</span><span class="date">28</span></button>
+      <button class="day-tab" data-day="5"><span class="dow">Пт</span><span class="date">29</span></button>
+      <button class="day-tab" data-day="6"><span class="dow">Сб</span><span class="date">30</span></button>
+    </div>
+
+    <div class="day-agenda">
+      <div class="day-agenda-panel" data-day="1">
+        <div class="day-agenda-head">
+          <span class="date-title">Понедельник, 25 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#8A15EA;">
+          <div class="row"><span class="time">9:00 — 11:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Математика</div>
+          <div class="teacher">Иванова М. С.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+
+      <div class="day-agenda-panel" data-day="2">
+        <div class="day-agenda-head">
+          <span class="date-title">Вторник, 26 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#F04438;">
+          <div class="row"><span class="time">11:00 — 13:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Физика</div>
+          <div class="teacher">Сидоров А. Н.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+
+      <div class="day-agenda-panel" data-day="3">
+        <div class="day-agenda-head">
+          <span class="date-title">Среда, 27 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#2B7FFF;">
+          <div class="row"><span class="time">13:00 — 15:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Обществознание</div>
+          <div class="teacher">Волков С. П.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+
+      <div class="day-agenda-panel active" data-day="4">
+        <div class="day-agenda-head">
+          <span class="date-title">Четверг, 28 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#8A15EA;">
+          <div class="row"><span class="time">11:00 — 13:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Математика</div>
+          <div class="teacher">Иванова М. С.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+
+      <div class="day-agenda-panel" data-day="5">
+        <div class="day-agenda-head">
+          <span class="date-title">Пятница, 29 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#75EA15;">
+          <div class="row"><span class="time">15:00 — 17:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Русский язык</div>
+          <div class="teacher">Петрова Л. А.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+
+      <div class="day-agenda-panel" data-day="6">
+        <div class="day-agenda-head">
+          <span class="date-title">Суббота, 30 августа</span>
+          <span class="day-agenda-count">1 занятие</span>
+        </div>
+        <div class="day-event-card" style="--event-color:#8A15EA;">
+          <div class="row"><span class="time">14:00 — 16:00</span><span class="badge">Вебинар</span></div>
+          <div class="subject">Математика</div>
+          <div class="teacher">Иванова М. С.</div>
+          <button class="btn-soft">Открыть</button>
+        </div>
+      </div>
+    </div>
+    <!-- ================================================== -->
+
+    <!-- ===== ДЕСКТОП: сетка на всю неделю (скрыта на мобиле) ===== -->
     <div class="card schedule-wrap">
       <div class="schedule-grid">
         <div class="day-head" style="grid-column:2"><div class="dow">Пн</div><div class="date">25</div></div>
@@ -69,7 +173,6 @@
         <div class="day-head" style="grid-column:6"><div class="dow">Пт</div><div class="date">29</div></div>
         <div class="day-head" style="grid-column:7"><div class="dow">Сб</div><div class="date">30</div></div>
 
-        <template id="hours-template">9:00,10:00,11:00,12:00,13:00,14:00,15:00,16:00,17:00,18:00</template>
         <div class="time-cell" style="grid-row:2">9:00</div>
         <div class="day-col-bg" style="grid-row:2;grid-column:2"></div>
         <div class="day-col-bg" style="grid-row:2;grid-column:3"></div>
@@ -182,6 +285,7 @@
         </div>
       </div>
     </div>
+    <!-- ================================================== -->
 
   </div>
 </main>
@@ -220,6 +324,26 @@
   </div>
 </footer>
 <!-- ============================================================================================ -->
+
+<script src="../scripts/app.js"></script>
+<script>
+  document.querySelectorAll('.day-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var day = tab.getAttribute('data-day');
+      document.querySelectorAll('.day-tab').forEach(function(t){ t.classList.remove('active'); });
+      tab.classList.add('active');
+      document.querySelectorAll('.day-agenda-panel').forEach(function(panel){
+        panel.classList.toggle('active', panel.getAttribute('data-day') === day);
+      });
+    });
+  });
+
+  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.querySelector('.app-nav-wrap').classList.remove('menu-open');
+    });
+  });
+</script>
 
 </body>
 </html>

@@ -8,7 +8,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/style.css">
-
 </head>
 <body>
 
@@ -23,10 +22,21 @@
       <li><a href="support.html" class="active">Поддержка</a></li>
     </ul>
     <div class="app-nav-actions">
-      <span class="score-badge">85 баллов</span>
-      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+      <span class="score-badge" id="headerScore">—</span>
     </div>
+    <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
+      <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+    </a>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="dashboard.html">Мое обучение</a>
+    <a href="schedule.html">Расписание</a>
+    <a href="knowledge-base.html">База знаний</a>
+    <a href="support.html">Поддержка</a>
+  </div>
 </div>
 <div class="breadcrumb-wrap">
   <div class="breadcrumb">
@@ -43,9 +53,15 @@
   <div class="support">
     <h2>Поддержка</h2>
 
+    <!-- виден только на мобиле, переключает какая карточка ниже показана -->
+    <div class="support-tabs">
+      <button type="button" class="active" data-target="chat">Чат с куратором</button>
+      <button type="button" data-target="faq">Частые вопросы</button>
+    </div>
+
     <div class="support-row">
 
-      <div class="chat-card">
+      <div class="chat-card active-panel">
         <div class="chat-header">
           <div class="avatar-wrap">
             <img src="../assets/men 1.png" alt="Анна Смирнова">
@@ -56,17 +72,12 @@
             <div class="status">● Онлайн – отвечает за 5 мин</div>
           </div>
         </div>
-        <div class="chat-body">
-          <div class="msg">
-            <div class="bubble">Привет! Я Анна, ваш личный куратор. Чем могу помочь?</div>
-            <span class="time">10:02</span>
-          </div>
-          <div class="msg">
-            <div class="bubble">Можете задать любой вопрос по учебе, расписанию или платформе.</div>
-            <span class="time">10:02</span>
-          </div>
-        </div>
-        <form class="chat-input-row" onsubmit="return false;">
+
+        <!-- Сюда app.js рендерит историю сообщений из /api/support -->
+        <div class="chat-body"></div>
+
+        <!-- Форма без onsubmit="return false;" — app.js перехватит submit -->
+        <form class="chat-input-row">
           <input type="text" placeholder="Напишите сообщение...">
           <button type="submit" class="chat-send" aria-label="Отправить">➤</button>
         </form>
@@ -134,29 +145,37 @@
 </footer>
 <!-- ============================================================================================ -->
 
+<script src="../scripts/app.js"></script>
 <script>
-  document.querySelectorAll('.support-faq-item').forEach(function(item){
-    item.querySelector('.support-faq-q').addEventListener('click', function(){
+  // =========================================================
+  //  Только UI-логика страницы. Отправка сообщений — в app.js
+  // =========================================================
+
+  // FAQ-аккордеон
+  document.querySelectorAll('.support-faq-item').forEach(function (item) {
+    item.querySelector('.support-faq-q').addEventListener('click', function () {
       var isOpen = item.classList.contains('open');
-      document.querySelectorAll('.support-faq-item.open').forEach(function(el){ el.classList.remove('open'); });
-      if(!isOpen){ item.classList.add('open'); }
+      document.querySelectorAll('.support-faq-item.open').forEach(function (el) { el.classList.remove('open'); });
+      if (!isOpen) item.classList.add('open');
     });
   });
 
-  document.querySelector('.chat-input-row').addEventListener('submit', function(e){
-    e.preventDefault();
-    var input = this.querySelector('input');
-    var body = this.closest('.chat-card').querySelector('.chat-body');
-    var text = input.value.trim();
-    if(!text) return;
-    var msg = document.createElement('div');
-    msg.className = 'msg';
-    msg.style.alignItems = 'flex-end';
-    msg.style.marginLeft = 'auto';
-    msg.innerHTML = '<div class="bubble" style="background:#111111;color:white;border-radius:16px 16px 4px 16px;">' + text.replace(/</g,'&lt;') + '</div><span class="time">Сейчас</span>';
-    body.appendChild(msg);
-    body.scrollTop = body.scrollHeight;
-    input.value = '';
+  // Мобильный переключатель «Чат с куратором» / «Частые вопросы»
+  document.querySelectorAll('.support-tabs button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.support-tabs button').forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      var target = btn.getAttribute('data-target');
+      document.querySelector('.chat-card').classList.toggle('active-panel', target === 'chat');
+      document.querySelector('.faq-card').classList.toggle('active-panel', target === 'faq');
+    });
+  });
+
+  // Закрытие мобильного меню
+  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function (el) {
+    el.addEventListener('click', function () {
+      document.querySelector('.app-nav-wrap').classList.remove('menu-open');
+    });
   });
 </script>
 

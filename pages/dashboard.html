@@ -23,10 +23,9 @@
     </ul>
     <div class="app-nav-actions">
       <span class="score-badge" id="headerScore">—</span>
-
       <div class="nav-avatar-wrap" id="navAvatarWrap">
-        <button type="button" class="nav-avatar" id="navAvatar" aria-haspopup="true" aria-expanded="false" title="Личный кабинет">
-          <img src="../assets/Avatar.png" alt="Аватар пользователя" id="headerAvatar">
+        <button type="button" class="nav-avatar" id="navAvatar" aria-haspopup="true" aria-expanded="false">
+          <img src="../assets/Avatar.png" alt="Аватар" id="headerAvatar">
         </button>
         <div class="account-dropdown" id="accountDropdown">
           <div class="account-dropdown-email" id="accountEmail">Загрузка...</div>
@@ -34,7 +33,16 @@
         </div>
       </div>
     </div>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.app-nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="dashboard.html">Мое обучение</a>
+    <a href="schedule.html">Расписание</a>
+    <a href="knowledge-base.html">База знаний</a>
+    <a href="support.html">Поддержка</a>
+  </div>
 </div>
 <div class="breadcrumb-wrap">
   <div class="breadcrumb">
@@ -66,20 +74,15 @@
     <div class="card progress-card">
       <div class="card-head">
         <h3>Моя успеваемость</h3>
-        <a href="#" class="see-more">Подробная статистика по всем предметам</a>
       </div>
       <div class="progress-layout">
-        <div class="subject-list" id="subjectList">
-          <!-- Сюда рендерим предметы через JS -->
-        </div>
+        <div class="subject-list" id="subjectList"></div>
         <div class="week-card" id="weekCard">
           <div>
             <h4>Активность за неделю</h4>
             <div class="sub">Средний фокус по дням обучения</div>
           </div>
-          <div class="bars" id="weeklyBars">
-            <!-- Сюда рендерим график через JS -->
-          </div>
+          <div class="bars" id="weeklyBars"></div>
         </div>
       </div>
     </div>
@@ -87,10 +90,6 @@
     <div class="card assign-card">
       <div class="card-head">
         <h3>Мои задания на этой неделе</h3>
-        <div class="filters">
-          <div class="select-chip" id="filterSubject">Все предметы <span>▾</span></div>
-          <div class="select-chip" id="filterStatus">По дедлайну <span>▾</span></div>
-        </div>
       </div>
       <table class="assign-table">
         <thead>
@@ -102,9 +101,7 @@
             <th>Баллы</th>
           </tr>
         </thead>
-        <tbody id="assignmentsBody">
-          <!-- Сюда рендерим задания через JS -->
-        </tbody>
+        <tbody id="assignmentsBody"></tbody>
       </table>
     </div>
 
@@ -147,13 +144,15 @@
 </footer>
 <!-- ============================================================================================ -->
 
+<script src="../scripts/app.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    var wrap = document.getElementById('navAvatarWrap');
-    var toggleBtn = document.getElementById('navAvatar');
-    var dropdown = document.getElementById('accountDropdown');
-    var emailEl = document.getElementById('accountEmail');
-    var logoutBtn = document.getElementById('logoutBtn');
+    // ---------- Дропдаун аккаунта ----------
+    const wrap = document.getElementById('navAvatarWrap');
+    const toggleBtn = document.getElementById('navAvatar');
+    const dropdown = document.getElementById('accountDropdown');
+    const emailEl = document.getElementById('accountEmail');
+    const logoutBtn = document.getElementById('logoutBtn');
 
     function closeDropdown() {
       dropdown.classList.remove('open');
@@ -166,55 +165,38 @@
 
     toggleBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      if (dropdown.classList.contains('open')) {
-        closeDropdown();
-      } else {
-        openDropdown();
-      }
+      if (dropdown.classList.contains('open')) closeDropdown(); else openDropdown();
     });
+    document.addEventListener('click', function (e) { if (!wrap.contains(e.target)) closeDropdown(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDropdown(); });
 
-    document.addEventListener('click', function (e) {
-      if (!wrap.contains(e.target)) closeDropdown();
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape') closeDropdown();
-    });
-
-    var token = document.cookie
-      .split('; ')
-      .find(function (row) { return row.startsWith('session_token='); })
-      ?.split('=')[1];
-
-    if (token) {
-      fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
-        .then(function (res) { return res.json(); })
-        .then(function (data) {
-          if (data.ok && data.data) {
-            emailEl.textContent = data.data.email || 'Аккаунт';
-            if (data.data.fullName) {
-              document.getElementById('profileName').textContent = data.data.fullName;
-            }
-            if (data.data.email) {
-              document.getElementById('profileEmail').textContent = data.data.email;
-            }
-          } else {
-            emailEl.textContent = 'Не удалось загрузить аккаунт';
-          }
+    // ---------- Инфа о пользователе ----------
+    if (window.getCurrentUser) {
+      getCurrentUser()
+        .then(function (user) {
+          if (user && user.email) emailEl.textContent = user.email;
+          else emailEl.textContent = 'Аккаунт';
         })
-        .catch(function () {
-          emailEl.textContent = 'Не удалось загрузить аккаунт';
-        });
-    } else {
-      emailEl.textContent = 'Вы не авторизованы';
+        .catch(function () { emailEl.textContent = 'Не удалось загрузить'; });
     }
 
-    logoutBtn.addEventListener('click', function () {
-      document.cookie = 'session_token=; path=/; max-age=0';
-      window.location.href = 'login.html';
+    // ---------- Logout ----------
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', function () {
+        document.cookie = 'session_token=; path=/; max-age=0';
+        if (window.logout) logout().catch(function(){});
+        window.location.href = 'login.html';
+      });
+    }
+
+    // ---------- Закрытие мобильного меню ----------
+    document.querySelectorAll('.mobile-menu a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        document.querySelector('.app-nav-wrap').classList.remove('menu-open');
+      });
     });
   });
 </script>
 
-<script src="/scripts/app.js"></script>
 </body>
 </html>

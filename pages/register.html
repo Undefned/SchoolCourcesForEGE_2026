@@ -8,16 +8,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles/style.css">
-
 </head>
 <body>
 
-<!-- =========================== REGISTER PAGE =========================== -->
 <div class="auth-page">
   <div class="auth-card">
     <h2>Регистрация</h2>
 
-    <form class="auth-form" id="registerForm">
+    <form class="auth-form" id="registerForm" novalidate>
       <div class="auth-error" id="registerError"></div>
       <div class="auth-success" id="registerSuccess"></div>
 
@@ -56,21 +54,34 @@
   </div>
 </div>
 
-<!-- =========================== SCRIPT =========================== -->
+<script src="../scripts/app.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('registerForm');
     const errorEl = document.getElementById('registerError');
     const successEl = document.getElementById('registerSuccess');
     const submitBtn = document.getElementById('registerSubmit');
 
-    form.addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.classList.add('visible');
+      successEl.classList.remove('visible');
+    }
+    function showSuccess(msg) {
+      successEl.textContent = msg;
+      successEl.classList.add('visible');
+      errorEl.classList.remove('visible');
+    }
+    function clearMessages() {
       errorEl.classList.remove('visible');
       successEl.classList.remove('visible');
       errorEl.textContent = '';
       successEl.textContent = '';
+    }
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      clearMessages();
 
       const fullName = document.getElementById('registerName').value.trim();
       const email = document.getElementById('registerEmail').value.trim();
@@ -78,69 +89,40 @@
       const password = document.getElementById('registerPassword').value.trim();
 
       if (!fullName || !email || !password || !grade) {
-        errorEl.textContent = 'Пожалуйста, заполните все поля.';
-        errorEl.classList.add('visible');
+        showError('Пожалуйста, заполните все поля.');
         return;
       }
-
       if (fullName.length < 3) {
-        errorEl.textContent = 'Имя должно содержать минимум 3 символа.';
-        errorEl.classList.add('visible');
+        showError('Имя должно содержать минимум 3 символа.');
         return;
       }
-
       if (!email.includes('@') || !email.includes('.')) {
-        errorEl.textContent = 'Пожалуйста, введите корректный email.';
-        errorEl.classList.add('visible');
+        showError('Введите корректный email.');
         return;
       }
-
       if (password.length < 6) {
-        errorEl.textContent = 'Пароль должен содержать минимум 6 символов.';
-        errorEl.classList.add('visible');
+        showError('Пароль должен содержать минимум 6 символов.');
         return;
       }
 
-      submitBtn.textContent = 'Регистрация...';
       submitBtn.disabled = true;
+      submitBtn.textContent = 'Регистрация...';
 
       try {
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            fullName: fullName,
-            grade: parseInt(grade),
-          }),
-        });
+        const result = await register(email, password, fullName, parseInt(grade, 10));
 
-        const data = await response.json();
-
-        if (!response.ok || !data.ok) {
-          throw new Error(data.error?.message || 'Ошибка регистрации');
+        // Пробуем сохранить сессию как в app.js
+        if (result && result.token) {
+          document.cookie = `session_token=${result.token}; path=/; max-age=86400`;
         }
 
-        successEl.textContent = 'Регистрация успешна! Перенаправляем на вход...';
-        successEl.classList.add('visible');
-
-        if (data.data?.token) {
-          document.cookie = `session_token=${data.data.token}; path=/; max-age=86400`;
-        }
-
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 1500);
-
-      } catch (error) {
-        errorEl.textContent = error.message || 'Ошибка при регистрации. Попробуйте позже.';
-        errorEl.classList.add('visible');
+        showSuccess('Регистрация успешна! Перенаправляем...');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+      } catch (err) {
+        showError(err.message || 'Ошибка при регистрации.');
       } finally {
-        submitBtn.textContent = 'Зарегистрироваться';
         submitBtn.disabled = false;
+        submitBtn.textContent = 'Зарегистрироваться';
       }
     });
   });

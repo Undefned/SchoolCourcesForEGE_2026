@@ -25,8 +25,23 @@
     </ul>
     <div class="nav-actions">
       <a href="index.html#cta" class="btn-primary btn-pill">Записаться</a>
+      <a href="dashboard.html" class="nav-avatar" title="Личный кабинет">
+        <img class="avatar" src="../assets/Avatar.png" alt="Аватар пользователя">
+      </a>
     </div>
+    <button class="nav-toggle" aria-label="Открыть меню" onclick="document.querySelector('.nav-wrap').classList.toggle('menu-open')">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+  <div class="mobile-menu">
+    <a href="index.html#how">Подготовка</a>
+    <a href="teachers.html">Преподаватели</a>
+    <a href="index.html#cta">Тарифы</a>
+    <a href="about.html#testimonials">Отзывы</a>
+    <a href="index.html#faq">FAQ</a>
+    <a href="index.html#cta" class="btn-primary">Записаться</a>
+    <a href="dashboard.html" class="mobile-avatar">Личный кабинет</a>
+  </div>
 </div>
 <!-- ================================================================= -->
 
@@ -164,6 +179,14 @@
   </div>
 </footer>
 <!-- ================================================================= -->
+
+<script>
+  document.querySelectorAll('.mobile-menu a, .mobile-menu button').forEach(function(el){
+    el.addEventListener('click', function(){
+      document.querySelector('.nav-wrap').classList.remove('menu-open');
+    });
+  });
+</script>
 
 </body>
 </html>
