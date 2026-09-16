@@ -284,6 +284,11 @@ function ensureMaterialModal() {
     });
     modal.addEventListener('close', () => {
         _currentModalMaterial = null;
+        // На некоторых мобильных браузерах <dialog> остаётся в потоке
+        // и «призраком» висит под футером. Убираем совсем.
+        setTimeout(() => {
+            if (!modal.open) modal.remove();
+        }, 0);
     });
     return modal;
 }
@@ -489,9 +494,9 @@ Object.assign(window, { openMaterial, openAssignment });
 async function loadDashboard() {
     try {
         const user = await getCurrentUser();
-        if (!user) { window.location.href = '/login.html'; return; }
+        if (!user) { window.location.href = 'login.html'; return; }
     } catch (err) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -531,7 +536,7 @@ function renderDashboard(data) {
     const statStreak = document.getElementById('statStreak');
     if (statLessons) statLessons.textContent = profile.total_lessons_attended || 0;
     if (statScore)   statScore.textContent   = Math.round(profile.avg_score || 0);
-    if (statStreak)  statStreak.textContent  = profile.streak_days || 0;
+    if (statStreak) statStreak.textContent = profile.streak_days != null ? profile.streak_days : 0;
 
     // Предметы
     const subjectList = document.getElementById('subjectList');
@@ -554,19 +559,30 @@ function renderDashboard(data) {
         }
     }
 
-    // График
+    // График активности (реальные данные из /user → activity)
     const weeklyBars = document.getElementById('weeklyBars');
     if (weeklyBars) {
-        const weekData = [
-            { day: 'Пн', height: 120 }, { day: 'Вт', height: 80 }, { day: 'Ср', height: 160 },
-            { day: 'Чт', height: 100 }, { day: 'Пт', height: 140 }, { day: 'Сб', height: 40 }, { day: 'Вс', height: 15 },
-        ];
-        weeklyBars.innerHTML = weekData.map(d => `
-            <div class="bar-col">
-                <div class="bar" style="height:${d.height}px;background:${d.height > 50 ? '#75EA15' : '#4E4E5E'};"></div>
-                <span class="day">${d.day}</span>
-            </div>
-        `).join('');
+        const activity = data.activity || [];
+        const maxTasks = Math.max(1, ...activity.map(a => Number(a.tasks) || 0));
+        const DOW_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
+
+        if (activity.length === 0) {
+            weeklyBars.innerHTML = '<span class="muted" style="color:#6B6B7A;font-size:13px;">Нет активности за последние 7 дней</span>';
+        } else {
+            weeklyBars.innerHTML = activity.map(a => {
+                const d = new Date(a.day + 'T00:00:00');
+                const dayLabel = DOW_SHORT[d.getDay()];
+                const tasks = Number(a.tasks) || 0;
+                const height = tasks > 0 ? Math.round((tasks / maxTasks) * 140) : 8;
+                const color = tasks > 0 ? '#75EA15' : '#4E4E5E';
+                return `
+                    <div class="bar-col">
+                        <div class="bar" style="height:${height}px;background:${color};" title="${tasks} заданий"></div>
+                        <span class="day">${dayLabel}</span>
+                    </div>
+                `;
+            }).join('');
+        }
     }
 
     // Задания

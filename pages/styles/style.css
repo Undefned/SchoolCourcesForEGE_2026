@@ -954,8 +954,8 @@ button,.btn{
 .support-faq-q span{ font-family:'Unbounded',sans-serif; font-weight:700; font-size:14px; color:var(--black); }
 .support-faq-toggle{ width:32px; height:32px; background:var(--back); border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--black); transition:transform .2s ease; }
 .support-faq-item.open .support-faq-toggle{ transform:rotate(45deg); }
-.support-faq-a{ max-height:0; overflow:hidden; transition:max-height .25s ease; }
-.support-faq-item.open .support-faq-a{ max-height:200px; }
+.support-faq-a{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+.support-faq-item.open .support-faq-a{ max-height:800px; }
 .support-faq-a p{ padding:0 0 20px; color:var(--main-text); font-size:14px; line-height:1.7; }
 
 /* переключатель «Чат с куратором / Частые вопросы» — виден только на мобиле */
@@ -987,6 +987,12 @@ button,.btn{
   .chat-card,.faq-card{ display:none; width:100%; max-width:none; }
   .chat-card.active-panel,.faq-card.active-panel{ display:flex; }
   .chat-card{ height:500px; }
+
+  .faq-card{ padding:20px; }
+  .faq-card h3{ font-size:18px; }
+  .support-faq-q{ padding:16px 0; gap:10px; }
+  .support-faq-q span{ font-size:13px; line-height:1.4; }
+  .support-faq-a p{ padding-bottom:16px; font-size:13px; line-height:1.6; }
 }
 
 /* ---------- 9.9 Teachers (teachers.html) ---------- */
@@ -1093,6 +1099,11 @@ button,.btn{
     overflow: hidden;
     display: flex;
     flex-direction: column;
+}
+/* Пока <dialog> закрыт — его вообще нет в потоке. Без этого на мобилке
+   под футером остаётся «призрак» модалки. */
+.material-modal:not([open]) {
+    display: none !important;
 }
 .material-modal::backdrop {
     background: rgba(10, 12, 18, 0.6);

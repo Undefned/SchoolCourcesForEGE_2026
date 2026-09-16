@@ -1,5 +1,5 @@
 -- =============================================
--- 0. DROP (в правильном порядке — сначала зависимые)
+-- 0. DROP
 -- =============================================
 DROP TABLE IF EXISTS assignment_submissions CASCADE;
 DROP TABLE IF EXISTS assignments            CASCADE;
@@ -16,7 +16,6 @@ DROP TABLE IF EXISTS sessions               CASCADE;
 DROP TABLE IF EXISTS users                  CASCADE;
 
 DROP FUNCTION IF EXISTS update_user_stats() CASCADE;
-DROP FUNCTION IF EXISTS update_updated_at() CASCADE;
 
 -- =============================================
 -- 1. ПОЛЬЗОВАТЕЛИ
@@ -27,16 +26,14 @@ CREATE TABLE users (
     password_hash   VARCHAR(255) NOT NULL,
     full_name       VARCHAR(255) NOT NULL,
     grade           INTEGER CHECK (grade BETWEEN 9 AND 11),
-    avatar_url      VARCHAR(500) DEFAULT '../../assets/Avatar.png',
+    avatar_url      VARCHAR(500) DEFAULT '../assets/Avatar.png',
     is_support      BOOLEAN DEFAULT FALSE,
     created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_active       BOOLEAN DEFAULT TRUE,
-    last_login      TIMESTAMP
+    is_active       BOOLEAN DEFAULT TRUE
 );
 
-CREATE INDEX idx_users_email       ON users(email);
-CREATE INDEX idx_users_is_support  ON users(is_support) WHERE is_support = TRUE;
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_is_support ON users(is_support) WHERE is_support = TRUE;
 
 -- =============================================
 -- 2. ПРЕДМЕТЫ
@@ -47,32 +44,29 @@ CREATE TABLE subjects (
     slug        VARCHAR(100) NOT NULL UNIQUE,
     color_code  VARCHAR(7)   DEFAULT '#8A15EA',
     icon        VARCHAR(50)  DEFAULT '📚',
-    icon_url    VARCHAR(500) DEFAULT NULL,
     sort_order  INTEGER      DEFAULT 0,
     is_active   BOOLEAN      DEFAULT TRUE
 );
 
-CREATE INDEX idx_subjects_slug       ON subjects(slug);
+CREATE INDEX idx_subjects_slug ON subjects(slug);
 CREATE INDEX idx_subjects_sort_order ON subjects(sort_order);
 
 -- =============================================
--- 3. ПОЛЬЗОВАТЕЛИ → ПРЕДМЕТЫ (прогресс)
+-- 3. ПОЛЬЗОВАТЕЛИ → ПРЕДМЕТЫ
 -- =============================================
 CREATE TABLE user_subjects (
     id            SERIAL PRIMARY KEY,
     user_id       INTEGER NOT NULL REFERENCES users(id)    ON DELETE CASCADE,
     subject_id    INTEGER NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
-    progress      INTEGER DEFAULT 0 CHECK (progress     BETWEEN 0 AND 100),
-    target_score  INTEGER DEFAULT 0 CHECK (target_score BETWEEN 0 AND 100),
-    started_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    target_score  INTEGER DEFAULT 80 CHECK (target_score BETWEEN 0 AND 100),
     UNIQUE(user_id, subject_id)
 );
 
-CREATE INDEX idx_user_subjects_user    ON user_subjects(user_id);
+CREATE INDEX idx_user_subjects_user ON user_subjects(user_id);
 CREATE INDEX idx_user_subjects_subject ON user_subjects(subject_id);
 
 -- =============================================
--- 4. МАТЕРИАЛЫ (база знаний)
+-- 4. МАТЕРИАЛЫ
 -- =============================================
 CREATE TABLE materials (
     id                SERIAL PRIMARY KEY,
@@ -81,17 +75,14 @@ CREATE TABLE materials (
     description       TEXT,
     type              VARCHAR(50)  NOT NULL CHECK (type IN ('conspect', 'test', 'task', 'video')),
     content           TEXT,
-    cover_url         VARCHAR(500) DEFAULT NULL,
     task_count        INTEGER DEFAULT 0,
     duration_minutes  INTEGER DEFAULT 30,
     sort_order        INTEGER DEFAULT 0,
-    is_active         BOOLEAN DEFAULT TRUE,
-    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    is_active         BOOLEAN DEFAULT TRUE
 );
 
-CREATE INDEX idx_materials_subject   ON materials(subject_id);
-CREATE INDEX idx_materials_type      ON materials(type);
-CREATE INDEX idx_materials_is_active ON materials(is_active);
+CREATE INDEX idx_materials_subject ON materials(subject_id);
+CREATE INDEX idx_materials_type ON materials(type);
 
 -- =============================================
 -- 5. ПРОГРЕСС ПО МАТЕРИАЛАМ
@@ -105,11 +96,10 @@ CREATE TABLE material_progress (
     UNIQUE(user_id, material_id)
 );
 
-CREATE INDEX idx_material_progress_user     ON material_progress(user_id);
-CREATE INDEX idx_material_progress_material ON material_progress(material_id);
+CREATE INDEX idx_material_progress_user ON material_progress(user_id);
 
 -- =============================================
--- 6. ЗАНЯТИЯ (расписание)
+-- 6. ЗАНЯТИЯ
 -- =============================================
 CREATE TABLE lessons (
     id                SERIAL PRIMARY KEY,
@@ -121,15 +111,11 @@ CREATE TABLE lessons (
                       CHECK (lesson_type IN ('webinar', 'practice', 'lecture', 'consultation')),
     scheduled_at      TIMESTAMP NOT NULL,
     duration_minutes  INTEGER DEFAULT 60,
-    meeting_url       VARCHAR(500),
-    is_cancelled      BOOLEAN DEFAULT FALSE,
-    created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    is_cancelled      BOOLEAN DEFAULT FALSE
 );
 
-CREATE INDEX idx_lessons_subject      ON lessons(subject_id);
-CREATE INDEX idx_lessons_teacher      ON lessons(teacher_id);
+CREATE INDEX idx_lessons_subject ON lessons(subject_id);
 CREATE INDEX idx_lessons_scheduled_at ON lessons(scheduled_at);
-CREATE INDEX idx_lessons_cancelled    ON lessons(is_cancelled) WHERE is_cancelled = FALSE;
 
 -- =============================================
 -- 7. ЗАПИСЬ НА ЗАНЯТИЯ
@@ -140,12 +126,10 @@ CREATE TABLE user_lessons (
     lesson_id    INTEGER NOT NULL REFERENCES lessons(id) ON DELETE CASCADE,
     status       VARCHAR(20) DEFAULT 'scheduled'
                  CHECK (status IN ('scheduled', 'attended', 'missed', 'cancelled')),
-    attended_at  TIMESTAMP,
     UNIQUE(user_id, lesson_id)
 );
 
-CREATE INDEX idx_user_lessons_user   ON user_lessons(user_id);
-CREATE INDEX idx_user_lessons_lesson ON user_lessons(lesson_id);
+CREATE INDEX idx_user_lessons_user ON user_lessons(user_id);
 CREATE INDEX idx_user_lessons_status ON user_lessons(status);
 
 -- =============================================
@@ -157,12 +141,10 @@ CREATE TABLE assignments (
     title           VARCHAR(255) NOT NULL,
     description     TEXT,
     material_id     INTEGER REFERENCES materials(id) ON DELETE SET NULL,
-    points_possible INTEGER DEFAULT 100,
-    due_date        DATE NOT NULL,
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    due_date        DATE NOT NULL
 );
 
-CREATE INDEX idx_assignments_subject  ON assignments(subject_id);
+CREATE INDEX idx_assignments_subject ON assignments(subject_id);
 CREATE INDEX idx_assignments_due_date ON assignments(due_date);
 CREATE INDEX idx_assignments_material ON assignments(material_id);
 
@@ -175,21 +157,18 @@ CREATE TABLE assignment_submissions (
     assignment_id    INTEGER NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
     status           VARCHAR(20) DEFAULT 'not_started'
                      CHECK (status IN ('not_started', 'in_progress', 'submitted', 'graded')),
-    submission_text  TEXT,
-    file_url         VARCHAR(500),
     score            INTEGER CHECK (score BETWEEN 0 AND 100),
-    feedback         TEXT,
     submitted_at     TIMESTAMP,
     graded_at        TIMESTAMP,
     UNIQUE(user_id, assignment_id)
 );
 
-CREATE INDEX idx_submissions_user       ON assignment_submissions(user_id);
+CREATE INDEX idx_submissions_user ON assignment_submissions(user_id);
 CREATE INDEX idx_submissions_assignment ON assignment_submissions(assignment_id);
-CREATE INDEX idx_submissions_status     ON assignment_submissions(status);
+CREATE INDEX idx_submissions_status ON assignment_submissions(status);
 
 -- =============================================
--- 10. СООБЩЕНИЯ ЧАТА ПОДДЕРЖКИ
+-- 10. СООБЩЕНИЯ ПОДДЕРЖКИ
 -- =============================================
 CREATE TABLE support_messages (
     id               SERIAL PRIMARY KEY,
@@ -198,21 +177,15 @@ CREATE TABLE support_messages (
     message          TEXT NOT NULL,
     is_from_support  BOOLEAN DEFAULT FALSE,
     is_read          BOOLEAN DEFAULT FALSE,
-    read_at          TIMESTAMP,
     created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_support_user    ON support_messages(user_id);
+CREATE INDEX idx_support_user ON support_messages(user_id);
 CREATE INDEX idx_support_created ON support_messages(created_at);
-CREATE INDEX idx_support_unread  ON support_messages(is_read) WHERE is_read = FALSE;
 
 -- =============================================
 -- 11. ЗАЯВКИ
 -- =============================================
--- Изменения относительно прошлой версии:
---   • email теперь NULL-able (на форме убрали поле email)
---   • добавлена колонка phone
---   • CHECK: должен быть указан хотя бы один контакт (email или phone)
 CREATE TABLE applications (
     id                SERIAL PRIMARY KEY,
     user_id           INTEGER REFERENCES users(id) ON DELETE SET NULL,
@@ -227,15 +200,12 @@ CREATE TABLE applications (
     source            VARCHAR(50) DEFAULT 'landing'
                       CHECK (source IN ('landing', 'cta', 'special_order')),
     created_at        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    processed_at      TIMESTAMP,
     CONSTRAINT applications_contact_check
         CHECK (email IS NOT NULL OR phone IS NOT NULL)
 );
 
-CREATE INDEX idx_applications_email   ON applications(email);
-CREATE INDEX idx_applications_phone   ON applications(phone);
-CREATE INDEX idx_applications_status  ON applications(status);
-CREATE INDEX idx_applications_created ON applications(created_at);
+CREATE INDEX idx_applications_email ON applications(email);
+CREATE INDEX idx_applications_status ON applications(status);
 
 -- =============================================
 -- 12. СТАТИСТИКА ПОЛЬЗОВАТЕЛЯ
@@ -245,50 +215,26 @@ CREATE TABLE user_stats (
     total_lessons_attended      INTEGER DEFAULT 0,
     total_assignments_completed INTEGER DEFAULT 0,
     avg_score                   DECIMAL(5,2) DEFAULT 0,
-    streak_days                 INTEGER DEFAULT 0,
-    last_activity_date          DATE,
-    updated_at                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    streak_days                 INTEGER DEFAULT 0
 );
 
 -- =============================================
--- 13. ВЕБ-СЕССИИ
+-- 13. СЕССИИ
 -- =============================================
 CREATE TABLE sessions (
     id             SERIAL PRIMARY KEY,
     user_id        INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     session_token  VARCHAR(255) NOT NULL UNIQUE,
-    ip_address     VARCHAR(45),
-    user_agent     TEXT,
     expires_at     TIMESTAMP NOT NULL,
-    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_sessions_user    ON sessions(user_id);
-CREATE INDEX idx_sessions_token   ON sessions(session_token);
+CREATE INDEX idx_sessions_user ON sessions(user_id);
+CREATE INDEX idx_sessions_token ON sessions(session_token);
 CREATE INDEX idx_sessions_expires ON sessions(expires_at);
 
 -- =============================================
--- 14. ТРИГГЕРЫ: updated_at
--- =============================================
-CREATE OR REPLACE FUNCTION update_updated_at()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_users_updated_at
-    BEFORE UPDATE ON users
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
-CREATE TRIGGER trigger_sessions_updated_at
-    BEFORE UPDATE ON sessions
-    FOR EACH ROW EXECUTE FUNCTION update_updated_at();
-
--- =============================================
--- 15. ТРИГГЕР: обновление статистики пользователя
+-- 14. ТРИГГЕР: обновление статистики пользователя
 -- =============================================
 CREATE OR REPLACE FUNCTION update_user_stats()
 RETURNS TRIGGER AS $$
@@ -307,8 +253,7 @@ BEGIN
         user_id,
         total_lessons_attended,
         total_assignments_completed,
-        avg_score,
-        updated_at
+        avg_score
     )
     VALUES (
         user_id_val,
@@ -320,14 +265,12 @@ BEGIN
             (SELECT AVG(score) FROM assignment_submissions
                 WHERE user_id = user_id_val AND status = 'graded'),
             0
-        ),
-        CURRENT_TIMESTAMP
+        )
     )
     ON CONFLICT (user_id) DO UPDATE SET
         total_lessons_attended      = EXCLUDED.total_lessons_attended,
         total_assignments_completed = EXCLUDED.total_assignments_completed,
-        avg_score                   = EXCLUDED.avg_score,
-        updated_at                  = EXCLUDED.updated_at;
+        avg_score                   = EXCLUDED.avg_score;
 
     RETURN NEW;
 END;

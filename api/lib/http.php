@@ -67,7 +67,7 @@ function json_error_response(string $message, int $status = 400, array $details 
 function require_method(string ...$allowedMethods): void
 {
     $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-    
+
     if (!in_array($method, $allowedMethods, true)) {
         header('Allow: ' . implode(', ', $allowedMethods));
         json_error_response('Метод не поддерживается', 405);
@@ -97,6 +97,16 @@ function read_json_body(): array
 // =============================================
 // ВАЛИДАЦИЯ
 // =============================================
+
+/**
+ * Проверка email БЕЗ filter_var — расширение filter на хостинге отключено.
+ * Достаточно: есть @, есть точка в домене, нет пробелов.
+ */
+function is_valid_email(string $email): bool
+{
+    return (bool)preg_match('/^[^\s@]+@[^\s@]+\.[^\s@]+$/', $email);
+}
+
 function required_string(array $data, string $key): string
 {
     $value = trim((string)($data[$key] ?? ''));
@@ -132,22 +142,22 @@ function required_int(array $data, string $key, int $min = 1): int
 function required_email(array $data, string $key): string
 {
     $email = required_string($data, $key);
-    
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+
+    if (!is_valid_email($email)) {
         json_error_response("Поле {$key} должно быть корректным email", 422);
     }
-    
+
     return $email;
 }
 
 function required_grade(array $data, string $key): int
 {
     $grade = required_int($data, $key, 9);
-    
+
     if ($grade > 11) {
         json_error_response("Класс должен быть от 9 до 11", 422);
     }
-    
+
     return $grade;
 }
 
@@ -184,15 +194,12 @@ function parse_bool_value(mixed $value): bool
 // ДОПОЛНИТЕЛЬНЫЕ ХЕЛПЕРЫ
 // =============================================
 
-/**
- * Получить значение из GET параметра с валидацией
- */
 function query_string(string $key, ?string $default = null): ?string
 {
     if (!isset($_GET[$key]) || $_GET[$key] === '') {
         return $default;
     }
-    
+
     return trim((string)$_GET[$key]);
 }
 
@@ -220,18 +227,15 @@ function query_bool(string $key, bool $default = false): bool
     return parse_bool_value($_GET[$key]);
 }
 
-/**
- * Получить текущий URL без параметров
- */
 function current_url(): string
 {
     return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http')
-        . '://' . $_SERVER['HTTP_HOST']
-        . $_SERVER['REQUEST_URI'];
+        . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost')
+        . ($_SERVER['REQUEST_URI'] ?? '/');
 }
 
 /**
- * Получить IP адрес клиента
+ * IP клиента БЕЗ filter_var.
  */
 function client_ip(): string
 {
@@ -242,25 +246,20 @@ function client_ip(): string
         'HTTP_X_CLUSTER_CLIENT_IP',
         'HTTP_FORWARDED_FOR',
         'HTTP_FORWARDED',
-        'REMOTE_ADDR'
+        'REMOTE_ADDR',
     ];
-    
+
     foreach ($headers as $header) {
-        if (isset($_SERVER[$header])) {
-            $ips = explode(',', $_SERVER[$header]);
-            $ip = trim($ips[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return $ip;
-            }
+        if (empty($_SERVER[$header])) continue;
+        $ip = trim(explode(',', (string)$_SERVER[$header])[0]);
+        if ($ip !== '') {
+            return $ip;
         }
     }
-    
+
     return '0.0.0.0';
 }
 
-/**
- * Логирование ошибок API
- */
 function log_api_error(Throwable $exception, array $context = []): void
 {
     $log = [
@@ -271,6 +270,6 @@ function log_api_error(Throwable $exception, array $context = []): void
         'code' => $exception->getCode(),
         'context' => $context,
     ];
-    
+
     error_log(json_encode($log, JSON_UNESCAPED_UNICODE));
 }
